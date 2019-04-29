@@ -4,6 +4,8 @@ import morgan from 'morgan';
 import mongoose from 'mongoose';
 import 'dotenv/config';
 
+import router from './routes';
+
 const app = express();
 
 const PORT = process.env.PORT || 4001;
@@ -29,6 +31,4 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('combined'));
 
-app.get('/api/v1/auth/signup', (req, res) => {
-  res.status(200).send({ name: req.body.name, message: 'Welcome to the users route' });
-});
+app.use('/api/v1', router);
