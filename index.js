@@ -9,8 +9,10 @@ import router from './routes';
 const app = express();
 
 const PORT = process.env.PORT || 4001;
+
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
 const db = mongoose.connection;
+
 db.on('error', () => {
   console.log('Failed to establish connection');
 });
