@@ -1,11 +1,24 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
+import mongoose from 'mongoose';
 import 'dotenv/config';
 
 const app = express();
 
 const PORT = process.env.PORT || 4001;
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
+const db = mongoose.connection;
+db.on('error', () => {
+  console.log('Failed to establish connection');
+});
+
+db.once('open', () => {
+  app.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
+  });
+  console.log('Connection established');
+});
 
 // Parses the text as JSON and exposes the resulting object on req.body
 app.use(bodyParser.json());
@@ -18,8 +31,4 @@ app.use(morgan('combined'));
 
 app.get('/api/v1/auth/signup', (req, res) => {
   res.status(200).send({ name: req.body.name, message: 'Welcome to the users route' });
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
 });
