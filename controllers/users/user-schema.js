@@ -2,16 +2,19 @@ import Joi from 'joi';
 
 const userSignUpSchema = Joi.object().keys({
   firstName: Joi.string()
+    .trim()
     .regex(/^[a-zA-Z]+$/)
     .min(2)
     .max(15)
     .required(),
   lastName: Joi.string()
+    .trim()
     .required()
     .regex(/^[a-zA-Z]+$/)
     .min(3)
     .max(15),
   email: Joi.string()
+    .trim()
     .email()
     .lowercase()
     .required(),
