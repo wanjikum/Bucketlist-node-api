@@ -12,37 +12,37 @@ const generateToken = id => jwt.sign({ id }, process.env.MY_SECRET, {
 });
 
 const createUser = (req, res) => {
-  const { error: validationError } = Joi.validate(req.body, userSignUpSchema);
+  const { error: validationError, value: userData } = Joi.validate(req.body, userSignUpSchema);
   if (validationError) {
     return res.status(400).send({ success: false, message: validationError.details[0].message });
   }
-  UserModel.findOne({ email: req.body.email }, async (err, user) => {
+  UserModel.findOne({ email: userData.email }, async (err, user) => {
     if (err) {
       return res.status(500).send({ success: false, message: err });
     }
     if (user) {
       return res
         .status(409)
-        .send({ success: false, message: `${req.body.firstName} already exists` });
+        .send({ success: false, message: `${userData.firstName} already exists` });
     }
-    const { password } = req.body;
+    const { password } = userData;
     if (!password) {
       return res.send({ success: false, message: 'Password is required' });
     }
     const hashedPassword = await hashPassword(password);
-    const newUser = new UserModel({ ...req.body, password: hashedPassword });
-    newUser.save((error, userData) => {
+    const newUser = new UserModel({ ...userData, password: hashedPassword });
+    newUser.save((error, newUserData) => {
       if (error) {
         res.status(500).send({ success: false, message: error.message });
       } else {
         const {
           _id: id, email, firstName, lastName,
-        } = userData;
+        } = newUserData;
 
         const token = generateToken(id);
 
         res.status(201).send({
-          message: `${req.body.firstName} has been created successfully.`,
+          message: `${userData.firstName} has been created successfully.`,
           userData: {
             id,
             email,
@@ -58,11 +58,11 @@ const createUser = (req, res) => {
 };
 
 const userLogin = (req, res) => {
-  const { error: validationError } = Joi.validate(req.body, userLogInSchema);
+  const { error: validationError, value: userData } = Joi.validate(req.body, userLogInSchema);
   if (validationError) {
     return res.status(400).send({ success: false, message: validationError.details[0].message });
   }
-  UserModel.findOne({ email: req.body.email }, (error, user) => {
+  UserModel.findOne({ email: userData.email }, (error, user) => {
     if (error) return res.status(500).send({ error, message: 'Error on server', success: false });
 
     if (!user) return res.status(404).send({ message: 'Email does not exist', success: false });
