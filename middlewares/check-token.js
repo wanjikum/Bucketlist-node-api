@@ -15,7 +15,7 @@ const checkToken = (req, res, next) => {
           message: 'Token is not valid',
         });
       }
-      req.user = user;
+      req.userId = user.id;
       next();
     });
   } else {
