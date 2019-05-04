@@ -5,7 +5,11 @@ import auth from '../middlewares/check-token';
 
 const { createUser, userLogin } = userController;
 const {
-  createBucketList, getbucketList, getBucketLists, updateBucketList,
+  createBucketList,
+  getbucketList,
+  getBucketLists,
+  updateBucketList,
+  deleteBucketList,
 } = bucketlistController;
 
 const router = express.Router();
@@ -20,6 +24,7 @@ router.post('/auth/bucketlists', auth, createBucketList);
 router.get('/auth/bucketlists/:id', auth, getbucketList);
 router.get('/auth/bucketlists', auth, getBucketLists);
 router.put('/auth/bucketlists/:id', auth, updateBucketList);
+router.delete('/auth/bucketlists/:id', auth, deleteBucketList);
 
 router.get('*', (req, res) => {
   res.status(404).send({ message: 'Route not found' });
