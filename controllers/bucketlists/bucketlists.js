@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import bucketListSchema from './bucketlist-schema';
+import bucketListSchema, { bucketlistUpdateSchema } from './bucketlist-schema';
 import BucketListModel from '../../models/bucketlist';
 
 const createBucketList = (req, res) => {
@@ -13,7 +13,7 @@ const createBucketList = (req, res) => {
     return res.status(400).send({ success: false, message: validationError.details[0].message });
   }
 
-  BucketListModel.findOne({ name: bucketlistData.name }, (err, bucketlist) => {
+  BucketListModel.findOne({ name: bucketlistData.name, userId: req.userId }, (err, bucketlist) => {
     if (err) {
       res.status(500).send({ success: false, message: 'Server encountered problem while saving.' });
     } else if (bucketlist) {
@@ -59,4 +59,32 @@ const getBucketLists = (req, res) => {
   });
 };
 
-export default { createBucketList, getbucketList, getBucketLists };
+const updateBucketList = (req, res) => {
+  const { error: validationError, value: bucketlistData } = Joi.validate(
+    { ...req.body, userId: req.userId },
+    bucketlistUpdateSchema,
+  );
+
+  if (validationError) {
+    return res.status(400).send({ success: false, message: validationError.details[0].message });
+  }
+  BucketListModel.findOneAndUpdate(
+    { _id: req.params.id },
+    bucketlistData,
+    { new: true },
+    (err, bucketList) => {
+      if (err) {
+        res.status(500).send({ success: false, message: 'Failed' });
+      } else {
+        res.status(200).send({ success: true, message: bucketList });
+      }
+    },
+  );
+};
+
+export default {
+  createBucketList,
+  getbucketList,
+  getBucketLists,
+  updateBucketList,
+};
