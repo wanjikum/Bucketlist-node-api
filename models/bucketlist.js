@@ -4,7 +4,7 @@ const bucketlistSchema = new mongoose.Schema({
   name: String,
   description: String,
   done: String,
-  userID: String,
+  userId: String,
 });
 
 const BucketlistModel = mongoose.model('Bucketlist', bucketlistSchema);

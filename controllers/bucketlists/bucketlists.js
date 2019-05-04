@@ -3,12 +3,10 @@ import Joi from 'joi';
 import bucketListSchema from './bucketlist-schema';
 import BucketListModel from '../../models/bucketlist';
 
-const { bucketlistSchema } = bucketListSchema;
-
 const createBucketList = (req, res) => {
   const { error: validationError, value: bucketlistData } = Joi.validate(
     { ...req.body, userId: req.userId },
-    bucketlistSchema,
+    bucketListSchema,
   );
 
   if (validationError) {
@@ -38,9 +36,9 @@ const createBucketList = (req, res) => {
 };
 
 const getbucketList = (req, res) => {
-  BucketListModel.findOne({ _id: req.params.id }, (err, bucketList) => {
+  BucketListModel.findOne({ _id: req.params.id, userId: req.userId }, (err, bucketList) => {
     if (err) {
-      res.status(500).send({ success: false, message: 'Bucketlist does not exist' });
+      res.status(500).send({ success: false, message: `Server Error: ${err}` });
     } else {
       res.status(200).send({ success: true, message: bucketList });
     }
@@ -48,11 +46,15 @@ const getbucketList = (req, res) => {
 };
 
 const getBucketLists = (req, res) => {
-  BucketListModel.find({}, (err, bucketLists) => {
+  BucketListModel.find({ userId: req.userId }, (err, bucketLists) => {
     if (err) {
       res.status(500).send({ success: false, message: err });
     } else {
-      res.status(200).send({ success: true, message: bucketLists });
+      res.status(200).send({
+        success: true,
+        bucketlistData: bucketLists || [],
+        message: 'Bucketlist(s) retrieved successfully',
+      });
     }
   });
 };
