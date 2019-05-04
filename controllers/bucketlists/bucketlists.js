@@ -40,7 +40,13 @@ const getbucketList = (req, res) => {
     if (err) {
       res.status(500).send({ success: false, message: `Server Error: ${err}` });
     } else {
-      res.status(200).send({ success: true, message: bucketList });
+      res.status(200).send({
+        success: true,
+        bucketlistData: bucketList || {},
+        message: bucketList
+          ? 'Bucketlist(s) retrieved successfully'
+          : `Bucketlist with id ${req.params.id} does not exist`,
+      });
     }
   });
 };
@@ -69,14 +75,35 @@ const updateBucketList = (req, res) => {
     return res.status(400).send({ success: false, message: validationError.details[0].message });
   }
   BucketListModel.findOneAndUpdate(
-    { _id: req.params.id },
+    { _id: req.params.id, userId: req.userId },
     bucketlistData,
     { new: true },
     (err, bucketList) => {
       if (err) {
         res.status(500).send({ success: false, message: 'Failed' });
       } else {
-        res.status(200).send({ success: true, message: bucketList });
+        res.status(200).send({
+          success: true,
+          bucketlistData: bucketList,
+          message: 'Bucketlist updated successfully',
+        });
+      }
+    },
+  );
+};
+
+const deleteBucketList = (req, res) => {
+  BucketListModel.findByIdAndRemove(
+    { _id: req.params.id, userId: req.userId },
+    (err, bucketlist) => {
+      if (err) {
+        res.status(500).send({ success: false, message: 'Failed' });
+      } else {
+        res.status(200).send({
+          success: true,
+          bucketlistData: bucketlist,
+          message: 'Bucketlist deleted successfully',
+        });
       }
     },
   );
@@ -87,4 +114,5 @@ export default {
   getbucketList,
   getBucketLists,
   updateBucketList,
+  deleteBucketList,
 };
