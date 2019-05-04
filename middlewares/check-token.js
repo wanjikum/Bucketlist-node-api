@@ -6,6 +6,7 @@ const checkToken = (req, res, next) => {
     // Remove Bearer from string
     token = token.slice(7, token.length);
   }
+  console.log('Token', token);
 
   if (token) {
     jwt.verify(token, process.env.MY_SECRET, (err, user) => {
@@ -15,6 +16,7 @@ const checkToken = (req, res, next) => {
           message: 'Token is not valid',
         });
       }
+      console.log('user', user);
       req.userId = user.id;
       next();
     });
