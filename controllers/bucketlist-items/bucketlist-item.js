@@ -51,8 +51,8 @@ const getbucketListItem = (req, res) => {
           success: true,
           bucketlistData: bucketListItem || {},
           message: bucketListItem
-            ? 'Bucketlist(s) retrieved successfully'
-            : `Bucketlist with id ${bucketListItem.id} does not exist`,
+            ? 'BucketlistItem(s) retrieved successfully'
+            : `BucketlistItem with id ${bucketListItem.id} does not exist`,
         });
       }
     },
@@ -93,7 +93,7 @@ const updateBucketListItem = (req, res) => {
         res.status(200).send({
           success: true,
           bucketlistData: bucketListItem,
-          message: 'Bucketlist updated successfully',
+          message: 'Bucketlist Item updated successfully',
         });
       }
     },
@@ -110,7 +110,7 @@ const deleteBucketListItem = (req, res) => {
         res.status(200).send({
           success: true,
           bucketlistData: bucketlist,
-          message: 'Bucketlist deleted successfully',
+          message: 'Bucketlist Item deleted successfully',
         });
       }
     },
