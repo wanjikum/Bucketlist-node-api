@@ -16,4 +16,17 @@ const bucketListItemSchema = Joi.object().keys({
   bucketlist_id: Joi.string().required(),
 });
 
+export const bucketListItemUpdateSchema = Joi.object().keys({
+  name: Joi.string()
+    .trim()
+    .regex(/^[a-zA-Z ]+$/)
+    .min(2)
+    .max(50),
+  status: Joi.string()
+    .trim()
+    .email()
+    .lowercase()
+    .valid('done', 'in progress', 'to do'),
+});
+
 export default bucketListItemSchema;
