@@ -13,7 +13,13 @@ const {
   deleteBucketList,
 } = bucketlistController;
 
-const { createBucketListItem } = bucketListItemController;
+const {
+  createBucketListItem,
+  getBucketListItems,
+  updateBucketListItem,
+  deleteBucketListItem,
+  getbucketListItem,
+} = bucketListItemController;
 
 const router = express.Router();
 
@@ -29,6 +35,14 @@ router.get('/auth/bucketlists', auth, getBucketLists);
 router.put('/auth/bucketlists/:id', auth, updateBucketList);
 router.delete('/auth/bucketlists/:id', auth, deleteBucketList);
 router.post('/auth/bucketlists/:id/bucketlistItems/', auth, createBucketListItem);
+router.get('/auth/bucketlists/:id/bucketlistItems/', auth, getBucketListItems);
+router.get('/auth/bucketlists/:id/bucketlistItems/:bucketlistItemId', auth, getbucketListItem);
+router.put('/auth/bucketlists/:id/bucketlistItems/:bucketlistItemId', auth, updateBucketListItem);
+router.delete(
+  '/auth/bucketlists/:id/bucketlistItems/:bucketlistItemId',
+  auth,
+  deleteBucketListItem,
+);
 
 router.get('*', (req, res) => {
   res.status(404).send({ message: 'Route not found' });

@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import bucketListItemSchema from './bucketlist-item-schema';
+import bucketListItemSchema, { bucketListItemUpdateSchema } from './bucketlist-item-schema';
 import BucketListItemModel from '../../models/bucketlist-items';
 
 const createBucketListItem = (req, res) => {
@@ -40,4 +40,87 @@ const createBucketListItem = (req, res) => {
   );
 };
 
-export default { createBucketListItem };
+const getbucketListItem = (req, res) => {
+  BucketListItemModel.findOne(
+    { _id: req.params.bucketlistItemId, bucketlist_id: req.params.id },
+    (err, bucketListItem) => {
+      if (err) {
+        res.status(500).send({ success: false, message: `Server Error: ${err}` });
+      } else {
+        res.status(200).send({
+          success: true,
+          bucketlistData: bucketListItem || {},
+          message: bucketListItem
+            ? 'Bucketlist(s) retrieved successfully'
+            : `Bucketlist with id ${bucketListItem.id} does not exist`,
+        });
+      }
+    },
+  );
+};
+
+const getBucketListItems = (req, res) => {
+  BucketListItemModel.find({ bucketlist_id: req.params.id }, (err, bucketListItems) => {
+    if (err) {
+      res.status(500).send({ success: false, message: err });
+    } else {
+      res.status(200).send({
+        success: true,
+        bucketlistData: bucketListItems || [],
+        message: 'Bucketlist(s) retrieved successfully',
+      });
+    }
+  });
+};
+
+const updateBucketListItem = (req, res) => {
+  const { error: validationError, value: bucketListItemData } = Joi.validate(
+    { ...req.body },
+    bucketListItemUpdateSchema,
+  );
+
+  if (validationError) {
+    return res.status(400).send({ success: false, message: validationError.details[0].message });
+  }
+  BucketListItemModel.findOneAndUpdate(
+    { _id: req.params.bucketlistItemId, bucketlist_id: req.params.id },
+    bucketListItemData,
+    { new: true },
+    (err, bucketListItem) => {
+      if (err) {
+        res.status(500).send({ success: false, message: 'Failed' });
+      } else {
+        res.status(200).send({
+          success: true,
+          bucketlistData: bucketListItem,
+          message: 'Bucketlist updated successfully',
+        });
+      }
+    },
+  );
+};
+
+const deleteBucketListItem = (req, res) => {
+  BucketListItemModel.findByIdAndRemove(
+    { _id: req.params.bucketlistItemId, bucketlist_id: req.params.id },
+    (err, bucketlist) => {
+      if (err) {
+        res.status(500).send({ success: false, message: 'Failed' });
+      } else {
+        res.status(200).send({
+          success: true,
+          bucketlistData: bucketlist,
+          message: 'Bucketlist deleted successfully',
+        });
+      }
+    },
+  );
+};
+
+export default {
+  createBucketListItem,
+  getBucketListItems,
+  updateBucketListItem,
+  deleteBucketListItem,
+  getbucketListItem,
+};
