@@ -45,7 +45,10 @@ const getbucketListItem = (req, res) => {
     { _id: req.params.bucketlistItemId, bucketlist_id: req.params.id },
     (err, bucketListItem) => {
       if (err) {
-        res.status(500).send({ success: false, message: `Server Error: ${err}` });
+        res.status(500).send({
+          success: false,
+          message: `The bucketlist Item  with id ${req.params.bucketlistItemId} does not exist`,
+        });
       } else {
         res.status(200).send({
           success: true,
@@ -88,7 +91,10 @@ const updateBucketListItem = (req, res) => {
     { new: true },
     (err, bucketListItem) => {
       if (err) {
-        res.status(500).send({ success: false, message: 'Failed' });
+        res.status(500).send({
+          success: false,
+          message: `The bucketlist Item  with id ${req.params.bucketlistItemId} does not exist`,
+        });
       } else {
         res.status(200).send({
           success: true,
@@ -105,7 +111,10 @@ const deleteBucketListItem = (req, res) => {
     { _id: req.params.bucketlistItemId, bucketlist_id: req.params.id },
     (err, bucketlist) => {
       if (err) {
-        res.status(500).send({ success: false, message: 'Failed' });
+        res.status(500).send({
+          success: false,
+          message: `The bucketlist Item  with id ${req.params.bucketlistItemId} does not exist`,
+        });
       } else {
         res.status(200).send({
           success: true,
