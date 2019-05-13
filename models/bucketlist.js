@@ -5,7 +5,10 @@ const bucketlistSchema = new mongoose.Schema({
   name: String,
   description: String,
   done: String,
-  userId: String,
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
 });
 
 bucketlistSchema.plugin(mongoosePaginate);

@@ -4,9 +4,13 @@ import mongoosePaginate from 'mongoose-paginate';
 const bucketListItemSchema = new mongoose.Schema({
   name: String,
   status: String,
-  bucketlist_id: {
+  bucketlistId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Bucketlist',
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
   },
 });
 

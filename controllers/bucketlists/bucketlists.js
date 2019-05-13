@@ -56,7 +56,7 @@ const getBucketLists = (req, res) => {
   const limit = parseInt(req.query.limit, 16);
 
   if (page && limit) {
-    BucketListModel.paginate({}, { page, limit }, (err, bucketLists) => {
+    BucketListModel.paginate({ userId: req.userId }, { page, limit }, (err, bucketLists) => {
       if (err) {
         res.status(500).send({ success: false, message: err });
       } else {

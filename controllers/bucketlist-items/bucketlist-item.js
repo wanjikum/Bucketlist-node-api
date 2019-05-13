@@ -5,7 +5,7 @@ import BucketListItemModel from '../../models/bucketlist-items';
 
 const createBucketListItem = (req, res) => {
   const { error: validationError, value: bucketListItemData } = Joi.validate(
-    { ...req.body, bucketlist_id: req.params.id },
+    { ...req.body, bucketlistId: req.params.id },
     bucketListItemSchema,
   );
 
@@ -14,7 +14,11 @@ const createBucketListItem = (req, res) => {
   }
 
   BucketListItemModel.findOne(
-    { name: bucketListItemData.name, bucketlist_id: bucketListItemData.bucketlist_id },
+    {
+      name: bucketListItemData.name,
+      bucketlistId: bucketListItemData.bucketlistId,
+      userId: req.userId,
+    },
     (err, bucketListItem) => {
       if (err) {
         res
@@ -23,7 +27,10 @@ const createBucketListItem = (req, res) => {
       } else if (bucketListItem) {
         res.status(409).send({ success: false, message: 'Bucketlist already exists' });
       } else {
-        const newBucketListItem = new BucketListItemModel(bucketListItemData);
+        const newBucketListItem = new BucketListItemModel({
+          ...bucketListItemData,
+          userId: req.userId,
+        });
         newBucketListItem.save((error, newBucketListItemData) => {
           if (error) {
             res.status(500).send({ success: false, message: err });
@@ -42,12 +49,12 @@ const createBucketListItem = (req, res) => {
 
 const getbucketListItem = (req, res) => {
   BucketListItemModel.findOne(
-    { _id: req.params.bucketlistItemId, bucketlist_id: req.params.id },
+    { _id: req.params.bucketlistItemId, bucketlistId: req.params.id, userId: req.userId },
     (err, bucketListItem) => {
       if (err) {
         res.status(500).send({
           success: false,
-          message: `The bucketlist Item  with id ${req.params.bucketlistItemId} does not exist`,
+          message: `Server error ${err}`,
         });
       } else {
         res.status(200).send({
@@ -55,7 +62,7 @@ const getbucketListItem = (req, res) => {
           bucketlistData: bucketListItem || {},
           message: bucketListItem
             ? 'BucketlistItem(s) retrieved successfully'
-            : `BucketlistItem with id ${bucketListItem.id} does not exist`,
+            : `BucketlistItem with id ${req.params.bucketlistItemId} does not exist`,
         });
       }
     },
@@ -67,29 +74,40 @@ const getBucketListItems = (req, res) => {
   const limit = parseInt(req.query.limit, 16);
 
   if (page && limit) {
-    BucketListItemModel.paginate({}, { page, limit }, (err, bucketLists) => {
-      if (err) {
-        res.status(500).send({ success: false, message: err });
-      } else {
-        res.status(200).send({
-          success: true,
-          bucketlistData: bucketLists || [],
-          message: 'Bucketlist item(s) retrieved and paginated successfully',
-        });
-      }
-    });
+    BucketListItemModel.paginate(
+      { bucketlistId: req.params.id, userId: req.userId },
+      { page, limit },
+      (err, bucketListItems) => {
+        if (err) {
+          res.status(500).send({ success: false, message: `Server error ${err}` });
+        } else {
+          res.status(200).send({
+            success: true,
+            bucketlistData: bucketListItems,
+            message: bucketListItems.docs.length
+              ? 'Bucketlist item(s) retrieved and paginated successfully'
+              : 'No bucketlist items available',
+          });
+        }
+      },
+    );
   } else {
-    BucketListItemModel.find({ bucketlist_id: req.params.id }, (err, bucketListItems) => {
-      if (err) {
-        res.status(500).send({ success: false, message: err });
-      } else {
-        res.status(200).send({
-          success: true,
-          bucketlistData: bucketListItems || [],
-          message: 'Bucketlist item(s) retrieved successfully',
-        });
-      }
-    });
+    BucketListItemModel.find(
+      { bucketlistId: req.params.id, userId: req.userId },
+      (err, bucketListItems) => {
+        if (err) {
+          res.status(500).send({ success: false, message: err });
+        } else {
+          res.status(200).send({
+            success: true,
+            bucketlistData: bucketListItems,
+            message: bucketListItems.docs.length
+              ? 'Bucketlist item(s) retrieved and paginated successfully'
+              : 'No bucketlist items available',
+          });
+        }
+      },
+    );
   }
 };
 
@@ -103,20 +121,22 @@ const updateBucketListItem = (req, res) => {
     return res.status(400).send({ success: false, message: validationError.details[0].message });
   }
   BucketListItemModel.findOneAndUpdate(
-    { _id: req.params.bucketlistItemId, bucketlist_id: req.params.id },
+    { _id: req.params.bucketlistItemId, bucketlistId: req.params.id, userId: req.userId },
     bucketListItemData,
     { new: true },
     (err, bucketListItem) => {
       if (err) {
         res.status(500).send({
           success: false,
-          message: `The bucketlist Item  with id ${req.params.bucketlistItemId} does not exist`,
+          message: `Server error ${err}`,
         });
       } else {
         res.status(200).send({
           success: true,
           bucketlistData: bucketListItem,
-          message: 'Bucketlist Item updated successfully',
+          message: bucketListItem
+            ? 'Bucketlist Item updated successfully'
+            : `The bucketlist Item  with id ${req.params.bucketlistItemId} does not exist`,
         });
       }
     },
@@ -125,18 +145,20 @@ const updateBucketListItem = (req, res) => {
 
 const deleteBucketListItem = (req, res) => {
   BucketListItemModel.findByIdAndRemove(
-    { _id: req.params.bucketlistItemId, bucketlist_id: req.params.id },
+    { _id: req.params.bucketlistItemId, bucketlistId: req.params.id, userId: req.userId },
     (err, bucketlist) => {
       if (err) {
         res.status(500).send({
           success: false,
-          message: `The bucketlist Item  with id ${req.params.bucketlistItemId} does not exist`,
+          message: `Server error ${err}`,
         });
       } else {
         res.status(200).send({
           success: true,
           bucketlistData: bucketlist,
-          message: 'Bucketlist Item deleted successfully',
+          message: bucketlist
+            ? 'Bucketlist Item deleted successfully'
+            : `The bucketlist Item  with id ${req.params.bucketlistItemId} does not exist`,
         });
       }
     },
