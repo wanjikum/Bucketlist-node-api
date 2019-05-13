@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate';
 
 const bucketlistSchema = new mongoose.Schema({
   name: String,
@@ -7,6 +8,7 @@ const bucketlistSchema = new mongoose.Schema({
   userId: String,
 });
 
+bucketlistSchema.plugin(mongoosePaginate);
 const BucketlistModel = mongoose.model('Bucketlist', bucketlistSchema);
 
 export default BucketlistModel;

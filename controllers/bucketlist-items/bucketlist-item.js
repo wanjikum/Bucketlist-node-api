@@ -63,17 +63,34 @@ const getbucketListItem = (req, res) => {
 };
 
 const getBucketListItems = (req, res) => {
-  BucketListItemModel.find({ bucketlist_id: req.params.id }, (err, bucketListItems) => {
-    if (err) {
-      res.status(500).send({ success: false, message: err });
-    } else {
-      res.status(200).send({
-        success: true,
-        bucketlistData: bucketListItems || [],
-        message: 'Bucketlist(s) retrieved successfully',
-      });
-    }
-  });
+  const page = parseInt(req.query.page, 16);
+  const limit = parseInt(req.query.limit, 16);
+
+  if (page && limit) {
+    BucketListItemModel.paginate({}, { page, limit }, (err, bucketLists) => {
+      if (err) {
+        res.status(500).send({ success: false, message: err });
+      } else {
+        res.status(200).send({
+          success: true,
+          bucketlistData: bucketLists || [],
+          message: 'Bucketlist item(s) retrieved and paginated successfully',
+        });
+      }
+    });
+  } else {
+    BucketListItemModel.find({ bucketlist_id: req.params.id }, (err, bucketListItems) => {
+      if (err) {
+        res.status(500).send({ success: false, message: err });
+      } else {
+        res.status(200).send({
+          success: true,
+          bucketlistData: bucketListItems || [],
+          message: 'Bucketlist item(s) retrieved successfully',
+        });
+      }
+    });
+  }
 };
 
 const updateBucketListItem = (req, res) => {

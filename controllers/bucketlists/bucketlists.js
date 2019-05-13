@@ -52,17 +52,34 @@ const getbucketList = (req, res) => {
 };
 
 const getBucketLists = (req, res) => {
-  BucketListModel.find({ userId: req.userId }, (err, bucketLists) => {
-    if (err) {
-      res.status(500).send({ success: false, message: err });
-    } else {
-      res.status(200).send({
-        success: true,
-        bucketlistData: bucketLists || [],
-        message: 'Bucketlist(s) retrieved successfully',
-      });
-    }
-  });
+  const page = parseInt(req.query.page, 16);
+  const limit = parseInt(req.query.limit, 16);
+
+  if (page && limit) {
+    BucketListModel.paginate({}, { page, limit }, (err, bucketLists) => {
+      if (err) {
+        res.status(500).send({ success: false, message: err });
+      } else {
+        res.status(200).send({
+          success: true,
+          bucketlistData: bucketLists || [],
+          message: 'Bucketlist(s) retrieved and paginated successfully',
+        });
+      }
+    });
+  } else {
+    BucketListModel.find({ userId: req.userId }, (err, bucketLists) => {
+      if (err) {
+        res.status(500).send({ success: false, message: err });
+      } else {
+        res.status(200).send({
+          success: true,
+          bucketlistData: bucketLists || [],
+          message: 'Bucketlist(s) retrieved successfully',
+        });
+      }
+    });
+  }
 };
 
 const updateBucketList = (req, res) => {
