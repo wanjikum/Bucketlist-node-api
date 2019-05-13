@@ -13,7 +13,7 @@ const bucketListItemSchema = Joi.object().keys({
     .lowercase()
     .valid('done', 'in progress', 'to do')
     .required(),
-  bucketlist_id: Joi.string().required(),
+  bucketlistId: Joi.string().required(),
 });
 
 export const bucketListItemUpdateSchema = Joi.object().keys({
