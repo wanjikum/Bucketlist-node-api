@@ -59,9 +59,11 @@ const createUser = (req, res) => {
 
 const userLogin = (req, res) => {
   const { error: validationError, value: userData } = Joi.validate(req.body, userLogInSchema);
+
   if (validationError) {
     return res.status(400).send({ success: false, message: validationError.details[0].message });
   }
+
   UserModel.findOne({ email: userData.email }, (error, user) => {
     if (error) return res.status(500).send({ error, message: 'Error on server', success: false });
 
@@ -69,7 +71,7 @@ const userLogin = (req, res) => {
 
     const { _doc: userDetails } = user;
     const {
-      id, password, __v: version, ...rest
+      _id: id, password, __v: version, ...rest
     } = userDetails;
     const passwordIsValid = bcrypt.compareSync(req.body.password, password);
     if (!passwordIsValid) return res.status(401).send({ auth: false, token: null, message: 'Invalid password' });
