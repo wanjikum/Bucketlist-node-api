@@ -6,23 +6,27 @@ const userSignUpSchema = Joi.object().keys({
     .regex(/^[a-zA-Z]+$/)
     .min(2)
     .max(15)
-    .required(),
+    .required()
+    .error(new Error('Invalid first name.')),
   lastName: Joi.string()
     .trim()
     .required()
     .regex(/^[a-zA-Z]+$/)
     .min(3)
-    .max(15),
+    .max(15)
+    .error(new Error('Invalid last name.')),
   email: Joi.string()
     .trim()
     .email()
     .lowercase()
-    .required(),
+    .required()
+    .error(new Error('Invalid email.')),
   password: Joi.string()
     .regex(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/)
     .min(7)
     .max(15)
-    .required(),
+    .required()
+    .error(new Error('Invalid password.')),
 });
 
 const userLogInSchema = Joi.object().keys({
@@ -30,12 +34,13 @@ const userLogInSchema = Joi.object().keys({
     .email()
     .lowercase()
     .required()
-    .error(new Error('Invalid email')),
+    .error(new Error('Invalid email.')),
   password: Joi.string()
     .regex(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/)
     .min(7)
     .max(15)
-    .required(),
+    .required()
+    .error(new Error('Invalid password.')),
 });
 
 export default {
