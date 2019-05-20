@@ -1,34 +1,34 @@
 import jwt from 'jsonwebtoken';
-import Joi from 'joi';
 import bcrypt from 'bcrypt';
 import UserModel from '../../models/users';
 import hashPassword from '../utils/hash-password';
-import userSchemas from './user-schema';
 
-const { userSignUpSchema, userLogInSchema } = userSchemas;
-
+// generate token
 const generateToken = id => jwt.sign({ id }, process.env.MY_SECRET, {
   expiresIn: process.env.ENVIRONMENT === 'DEVELOPMENT' ? 86400 : 600, // expires in 24 hours
 });
 
+// User sign up
 const createUser = (req, res) => {
-  const { error: validationError, value: userData } = Joi.validate(req.body, userSignUpSchema);
-  if (validationError) {
-    return res.status(400).send({ success: false, message: validationError.details[0].message });
-  }
+  const userData = req.body;
+
   UserModel.findOne({ email: userData.email }, async (err, user) => {
     if (err) {
       return res.status(500).send({ success: false, message: err });
     }
+
     if (user) {
-      return res
-        .status(409)
-        .send({ success: false, message: `${userData.firstName} already exists` });
+      return res.status(409).send({
+        success: false,
+        message: `User with the email ${userData.email} already exists.`,
+      });
     }
+
     const { password } = userData;
     if (!password) {
       return res.send({ success: false, message: 'Password is required' });
     }
+
     const hashedPassword = await hashPassword(password);
     const newUser = new UserModel({ ...userData, password: hashedPassword });
     newUser.save((error, newUserData) => {
@@ -57,12 +57,9 @@ const createUser = (req, res) => {
   });
 };
 
+// User login
 const userLogin = (req, res) => {
-  const { error: validationError, value: userData } = Joi.validate(req.body, userLogInSchema);
-
-  if (validationError) {
-    return res.status(400).send({ success: false, message: validationError.details[0].message });
-  }
+  const userData = req.body;
 
   UserModel.findOne({ email: userData.email }, (error, user) => {
     if (error) return res.status(500).send({ error, message: 'Error on server', success: false });
