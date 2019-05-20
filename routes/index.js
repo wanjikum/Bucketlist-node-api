@@ -1,10 +1,17 @@
 import express from 'express';
+
 import userController from '../controllers/users/users';
 import bucketlistController from '../controllers/bucketlists/bucketlists';
 import bucketListItemController from '../controllers/bucketlist-items/bucketlist-item';
+
 import auth from '../middlewares/check-token';
+import validateData from '../middlewares/validation';
+
+import userSchemas from '../controllers/users/user-schema';
 
 const { createUser, userLogin } = userController;
+const { userSignUpSchema, userLogInSchema } = userSchemas;
+
 const {
   createBucketList,
   getbucketList,
@@ -27,8 +34,8 @@ router.get('/', (req, res) => {
   res.status(200).send({ message: 'Welcome to the Bucketlist API' });
 });
 
-router.post('/signup', createUser);
-router.post('/signin', userLogin);
+router.post('/signup', validateData('body', userSignUpSchema), createUser);
+router.post('/signin', validateData('body', userLogInSchema), userLogin);
 router.post('/auth/bucketlists', auth, createBucketList);
 router.get('/auth/bucketlists/:id', auth, getbucketList);
 router.get('/auth/bucketlists', auth, getBucketLists);
