@@ -1,17 +1,7 @@
-import Joi from 'joi';
-
-import bucketListSchema, { bucketlistUpdateSchema } from './bucketlist-schema';
 import BucketListModel from '../../models/bucketlist';
 
 const createBucketList = (req, res) => {
-  const { error: validationError, value: bucketlistData } = Joi.validate(
-    { ...req.body, userId: req.userId },
-    bucketListSchema,
-  );
-
-  if (validationError) {
-    return res.status(400).send({ success: false, message: validationError.details[0].message });
-  }
+  const bucketlistData = { ...req.body, userId: req.userId };
 
   BucketListModel.findOne({ name: bucketlistData.name, userId: req.userId }, (err, bucketlist) => {
     if (err) {
@@ -83,14 +73,8 @@ const getBucketLists = (req, res) => {
 };
 
 const updateBucketList = (req, res) => {
-  const { error: validationError, value: bucketlistData } = Joi.validate(
-    { ...req.body, userId: req.userId },
-    bucketlistUpdateSchema,
-  );
+  const bucketlistData = { ...req.body, userId: req.userId };
 
-  if (validationError) {
-    return res.status(400).send({ success: false, message: validationError.details[0].message });
-  }
   BucketListModel.findOneAndUpdate(
     { _id: req.params.id, userId: req.userId },
     bucketlistData,
