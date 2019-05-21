@@ -8,6 +8,13 @@ import auth from '../middlewares/check-token';
 import validateData from '../middlewares/validation';
 
 import userSchemas from '../controllers/users/user-schema';
+import bucketlistSchema, {
+  bucketlistUpdateSchema,
+} from '../controllers/bucketlists/bucketlist-schema';
+
+import bucketListItemSchema, {
+  bucketListItemUpdateSchema,
+} from '../controllers/bucketlist-items/bucketlist-item-schema';
 
 const { createUser, userLogin } = userController;
 const { userSignUpSchema, userLogInSchema } = userSchemas;
@@ -36,15 +43,30 @@ router.get('/', (req, res) => {
 
 router.post('/signup', validateData('body', userSignUpSchema), createUser);
 router.post('/signin', validateData('body', userLogInSchema), userLogin);
-router.post('/auth/bucketlists', auth, createBucketList);
+router.post('/auth/bucketlists', auth, validateData('body', bucketlistSchema), createBucketList);
 router.get('/auth/bucketlists/:id', auth, getbucketList);
 router.get('/auth/bucketlists', auth, getBucketLists);
-router.put('/auth/bucketlists/:id', auth, updateBucketList);
+router.put(
+  '/auth/bucketlists/:id',
+  auth,
+  validateData('body', bucketlistUpdateSchema),
+  updateBucketList,
+);
 router.delete('/auth/bucketlists/:id', auth, deleteBucketList);
-router.post('/auth/bucketlists/:id/bucketlistItems/', auth, createBucketListItem);
+router.post(
+  '/auth/bucketlists/:id/bucketlistItems/',
+  auth,
+  validateData('body', bucketListItemSchema),
+  createBucketListItem,
+);
 router.get('/auth/bucketlists/:id/bucketlistItems/', auth, getBucketListItems);
 router.get('/auth/bucketlists/:id/bucketlistItems/:bucketlistItemId', auth, getbucketListItem);
-router.put('/auth/bucketlists/:id/bucketlistItems/:bucketlistItemId', auth, updateBucketListItem);
+router.put(
+  '/auth/bucketlists/:id/bucketlistItems/:bucketlistItemId',
+  auth,
+  validateData('body', bucketListItemUpdateSchema),
+  updateBucketListItem,
+);
 router.delete(
   '/auth/bucketlists/:id/bucketlistItems/:bucketlistItemId',
   auth,
