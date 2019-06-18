@@ -1,6 +1,9 @@
 import Joi from 'joi';
+import { expect } from 'chai';
 
-import bucketlistSchema, { bucketlistUpdateSchema } from '../bucketlist-schema';
+import bucketlistSchema, {
+  bucketlistUpdateSchema,
+} from '../controllers/bucketlists/bucketlist-schema';
 
 describe('BucketlistSchemas', () => {
   describe('bucketlistSchema', () => {
@@ -11,51 +14,51 @@ describe('BucketlistSchemas', () => {
       userId: 'user 1',
     };
 
-    test('allows baseRequest schema', () => {
+    it('allows baseRequest schema', () => {
       const { error } = Joi.validate(baseRequest, bucketlistSchema);
-      expect(error).toBeNull();
+      expect(error).to.be.a('null');
     });
 
-    test('block incorrect name', () => {
+    it('block incorrect name', () => {
       const invalidRequest = {
         ...baseRequest,
         name: '@$@#$#@$',
       };
 
       const { error } = Joi.validate(invalidRequest, bucketlistSchema);
-      expect(error).toEqual(new Error('Invalid name.'));
+      expect(error).to.include(new Error('Invalid name.'));
     });
 
-    test('block incorrect description', () => {
+    it('block incorrect description', () => {
       const invalidRequest = {
         ...baseRequest,
         description: true,
       };
 
       const { error } = Joi.validate(invalidRequest, bucketlistSchema);
-      expect(error).toEqual(new Error('Invalid description.'));
+      expect(error).to.include(new Error('Invalid description.'));
     });
 
-    test('block incorrect status', () => {
+    it('block incorrect status', () => {
       const invalidRequest = {
         ...baseRequest,
         status: '3444',
       };
 
       const { error } = Joi.validate(invalidRequest, bucketlistSchema);
-      expect(error).toEqual(
+      expect(error).to.include(
         new Error('Invalid status. It must be either done, in progress or to do.'),
       );
     });
 
-    test('block incorrect userId', () => {
+    it('block incorrect userId', () => {
       const invalidRequest = {
         ...baseRequest,
         userId: false,
       };
 
       const { error } = Joi.validate(invalidRequest, bucketlistSchema);
-      expect(error).toEqual(new Error('Invalid user id.'));
+      expect(error).to.include(new Error('Invalid user id.'));
     });
   });
 
@@ -67,51 +70,51 @@ describe('BucketlistSchemas', () => {
       userId: 'user 1',
     };
 
-    test('allows baseRequest schema', () => {
+    it('allows baseRequest schema', () => {
       const { error } = Joi.validate(baseRequest, bucketlistUpdateSchema);
-      expect(error).toBeNull();
+      expect(error).to.be.a('null');
     });
 
-    test('block incorrect name', () => {
+    it('block incorrect name', () => {
       const invalidRequest = {
         ...baseRequest,
         name: '@$@#$#@$',
       };
 
       const { error } = Joi.validate(invalidRequest, bucketlistUpdateSchema);
-      expect(error).toEqual(new Error('Invalid name.'));
+      expect(error).to.include(new Error('Invalid name.'));
     });
 
-    test('block incorrect description', () => {
+    it('block incorrect description', () => {
       const invalidRequest = {
         ...baseRequest,
         description: true,
       };
 
       const { error } = Joi.validate(invalidRequest, bucketlistUpdateSchema);
-      expect(error).toEqual(new Error('Invalid description.'));
+      expect(error).to.include(new Error('Invalid description.'));
     });
 
-    test('block incorrect status', () => {
+    it('block incorrect status', () => {
       const invalidRequest = {
         ...baseRequest,
         status: '3444',
       };
 
       const { error } = Joi.validate(invalidRequest, bucketlistUpdateSchema);
-      expect(error).toEqual(
+      expect(error).to.include(
         new Error('Invalid status. It must be either done, in progress or to do.'),
       );
     });
 
-    test('block incorrect userId', () => {
+    it('block incorrect userId', () => {
       const invalidRequest = {
         ...baseRequest,
         userId: false,
       };
 
       const { error } = Joi.validate(invalidRequest, bucketlistUpdateSchema);
-      expect(error).toEqual(new Error('Invalid user id.'));
+      expect(error).to.include(new Error('Invalid user id.'));
     });
   });
 });
