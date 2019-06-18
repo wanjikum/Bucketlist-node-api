@@ -1,6 +1,9 @@
 import Joi from 'joi';
+import { expect } from 'chai';
 
-import bucketListItemSchema, { bucketListItemUpdateSchema } from '../bucketlist-item-schema';
+import bucketListItemSchema, {
+  bucketListItemUpdateSchema,
+} from '../controllers/bucketlist-items/bucketlist-item-schema';
 
 describe('bucketListItemSchemas', () => {
   describe('bucketListItemSchema', () => {
@@ -10,41 +13,41 @@ describe('bucketListItemSchemas', () => {
       bucketlistId: 'user 1',
     };
 
-    test('allows baseRequest schema', () => {
+    it('allows baseRequest schema', () => {
       const { error } = Joi.validate(baseRequest, bucketListItemSchema);
-      expect(error).toBeNull();
+      expect(error).to.be.a('null');
     });
 
-    test('block incorrect name', () => {
+    it('blocks incorrect name', () => {
       const invalidRequest = {
         ...baseRequest,
         name: '@$@#$#@$',
       };
 
       const { error } = Joi.validate(invalidRequest, bucketListItemSchema);
-      expect(error).toEqual(new Error('Invalid name.'));
+      expect(error).to.include(new Error('Invalid name.'));
     });
 
-    test('block incorrect status', () => {
+    it('block incorrect status', () => {
       const invalidRequest = {
         ...baseRequest,
         status: '3444',
       };
 
       const { error } = Joi.validate(invalidRequest, bucketListItemSchema);
-      expect(error).toEqual(
+      expect(error).to.include(
         new Error('Invalid status. It must be either done, in progress or to do.'),
       );
     });
 
-    test('block incorrect bucketlistId', () => {
+    it('block incorrect bucketlistId', () => {
       const invalidRequest = {
         ...baseRequest,
         bucketlistId: false,
       };
 
       const { error } = Joi.validate(invalidRequest, bucketListItemSchema);
-      expect(error).toEqual(new Error('Invalid bucketlist id.'));
+      expect(error).to.include(new Error('Invalid bucketlist id.'));
     });
   });
 
@@ -54,29 +57,29 @@ describe('bucketListItemSchemas', () => {
       status: 'to do',
     };
 
-    test('allows baseRequest schema', () => {
+    it('allows baseRequest schema', () => {
       const { error } = Joi.validate(baseRequest, bucketListItemUpdateSchema);
-      expect(error).toBeNull();
+      expect(error).to.be.a('null');
     });
 
-    test('block incorrect name', () => {
+    it('block incorrect name', () => {
       const invalidRequest = {
         ...baseRequest,
         name: '@$@#$#@$',
       };
 
       const { error } = Joi.validate(invalidRequest, bucketListItemUpdateSchema);
-      expect(error).toEqual(new Error('Invalid name.'));
+      expect(error).to.include(new Error('Invalid name.'));
     });
 
-    test('block incorrect status', () => {
+    it('block incorrect status', () => {
       const invalidRequest = {
         ...baseRequest,
         status: '3444',
       };
 
       const { error } = Joi.validate(invalidRequest, bucketListItemUpdateSchema);
-      expect(error).toEqual(
+      expect(error).to.include(
         new Error('Invalid status. It must be either done, in progress or to do.'),
       );
     });
