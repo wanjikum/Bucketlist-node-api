@@ -15,14 +15,18 @@ mongoose.connect(config.DATABASE, { useNewUrlParser: true });
 const db = mongoose.connection;
 
 db.on('error', () => {
-  console.log('Failed to establish connection');
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Failed to establish connection');
+  }
 });
 
 db.once('open', () => {
-  app.listen(PORT, () => {
-    console.log(`Server is listening on port ${PORT}`);
-  });
-  console.log('Connection established');
+  if (process.env.NODE_ENV === 'development') {
+    app.listen(PORT, () => {
+      console.log(`Server is listening on port ${PORT}`);
+    });
+    console.log('Connection established');
+  }
 });
 
 // Parses the text as JSON and exposes the resulting object on req.body
@@ -32,7 +36,10 @@ app.use(bodyParser.json());
 // form data from regular forms set to POST) and exposes the resulting object
 // (containing the keys and values) on req.body.
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(morgan('combined'));
+
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('combined'));
+}
 
 app.use('/api/v1', router);
 
