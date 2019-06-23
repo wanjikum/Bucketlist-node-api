@@ -6,6 +6,7 @@ cache:
     - "node_modules"
 services: mongodb
 env:
-  - TEST_SECRET=somesecretTT
-  - TEST_DATABASE='mongodb:/127.0.0.1/test_bucketlist_db'
-  - TEST_PORT=3003
+  global:
+    - TEST_SECRET=somesecretTT
+    - TEST_DATABASE='mongodb:/127.0.0.1/test_bucketlist_db'
+    - TEST_PORT=3003

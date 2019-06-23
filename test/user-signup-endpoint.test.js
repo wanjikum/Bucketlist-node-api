@@ -28,7 +28,7 @@ describe('User signup endpoint: api/v1/signup', () => {
         done();
       })
       .on('error', () => {
-        console.log('Connection error : ', error);
+        console.log('Connection error : ');
       });
   });
 
