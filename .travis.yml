@@ -1,6 +1,12 @@
 language: node_js
-node_js: 
+node_js:
   - "stable"
 cache:
   directories:
     - "node_modules"
+services: mongodb
+env:
+  global:
+    - TEST_SECRET=somesecretTT
+    - TEST_DATABASE='mongodb:/127.0.0.1/test_bucketlist_db'
+    - TEST_PORT=3003

@@ -2,10 +2,11 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import UserModel from '../../models/users';
 import hashPassword from '../utils/hash-password';
+import config from '../../config';
 
 // generate token
-const generateToken = id => jwt.sign({ id }, process.env.MY_SECRET, {
-  expiresIn: process.env.ENVIRONMENT === 'DEVELOPMENT' ? 86400 : 600, // expires in 24 hours
+const generateToken = id => jwt.sign({ id }, config.SECRET, {
+  expiresIn: process.env.NODE_ENV === 'DEVELOPMENT' ? 86400 : 600, // expires in 24 hours
 });
 
 // User sign up
@@ -25,9 +26,6 @@ const createUser = (req, res) => {
     }
 
     const { password } = userData;
-    if (!password) {
-      return res.send({ success: false, message: 'Password is required' });
-    }
 
     const hashedPassword = await hashPassword(password);
     const newUser = new UserModel({ ...userData, password: hashedPassword });

@@ -2,15 +2,16 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
-import 'dotenv/config';
+import config from './config';
 
 import router from './routes';
 
 const app = express();
 
-const PORT = process.env.PORT || 4001;
+const PORT = config.PORT || 4001;
+mongoose.set('useNewUrlParser', true);
 
-mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
+mongoose.connect(config.DATABASE, { useNewUrlParser: true });
 const db = mongoose.connection;
 
 db.on('error', () => {
@@ -34,3 +35,5 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('combined'));
 
 app.use('/api/v1', router);
+
+export default app;
