@@ -32,12 +32,6 @@ describe('User signup endpoint: api/v1/signup', () => {
       });
   });
 
-  beforeEach((done) => {
-    mongoose.connection.collections.users.drop(() => {
-      done();
-    });
-  });
-
   it('Can signup a user', async () => {
     const res = await chai
       .request(app)
@@ -81,5 +75,9 @@ describe('User signup endpoint: api/v1/signup', () => {
       // this function runs after the drop is complete
       console.log('users db dropped');
     });
+  });
+
+  after(async () => {
+    await process.exit(0);
   });
 });

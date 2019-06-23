@@ -9,6 +9,7 @@ import router from './routes';
 const app = express();
 
 const PORT = config.PORT || 4001;
+mongoose.set('useNewUrlParser', true);
 
 mongoose.connect(config.DATABASE, { useNewUrlParser: true });
 const db = mongoose.connection;
