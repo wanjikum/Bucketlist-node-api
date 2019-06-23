@@ -58,6 +58,7 @@ const createUser = (req, res) => {
 // User login
 const userLogin = (req, res) => {
   const userData = req.body;
+  console.log('nimeitwa');
 
   UserModel.findOne({ email: userData.email }, (error, user) => {
     if (error) return res.status(500).send({ error, message: 'Error on server', success: false });
@@ -69,7 +70,13 @@ const userLogin = (req, res) => {
       _id: id, password, __v: version, ...rest
     } = userDetails;
     const passwordIsValid = bcrypt.compareSync(req.body.password, password);
-    if (!passwordIsValid) return res.status(401).send({ auth: false, token: null, message: 'Invalid password' });
+    if (!passwordIsValid) {
+      return res
+        .status(401)
+        .send({
+          auth: false, token: null, message: 'Invalid password', success: false,
+        });
+    }
 
     const token = generateToken(id);
 
