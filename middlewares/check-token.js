@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import config from '../config';
 
 const checkToken = (req, res, next) => {
   let token = req.headers['x-access-token'] || req.headers.authorization; // Express headers are auto converted to lowercase
@@ -8,7 +9,7 @@ const checkToken = (req, res, next) => {
   }
 
   if (token) {
-    jwt.verify(token, process.env.MY_SECRET, (err, user) => {
+    jwt.verify(token, config.SECRET, (err, user) => {
       if (err) {
         return res.json({
           success: false,
