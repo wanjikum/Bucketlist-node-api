@@ -6,9 +6,6 @@ import app from '../index';
 chai.use(chaiHttp);
 
 const baseUrl = '/api/v1';
-const mongoose = require('mongoose');
-
-mongoose.Promise = global.Promise;
 
 const userRegistration = {
   email: 'mickey.mouse@gmail.com',
@@ -18,27 +15,12 @@ const userRegistration = {
 };
 
 describe('Users endpoints', () => {
-  before((done) => {
-    // Connect to MongoDB Here
-    mongoose.connect('mongodb://localhost/testdb');
-
-    mongoose.connection
-      .once('open', () => {
-        console.log('Connected to MongoDB!');
-        done();
-      })
-      .on('error', () => {
-        console.log('Connection error : ');
-      });
-  });
-
   describe('user sign up: api/v1/signup', () => {
     it('Can create a user', async () => {
       const res = await chai
         .request(app)
         .post(`${baseUrl}/signup`)
-        .send(userRegistration)
-        .set('Accept', 'application/json');
+        .send(userRegistration);
 
       expect(res).to.have.status(201);
       expect(res.body).to.be.a('Object');
@@ -53,14 +35,12 @@ describe('Users endpoints', () => {
       const successfulSignUpRes = await chai
         .request(app)
         .post(`${baseUrl}/signup`)
-        .send(userRegistration)
-        .set('Accept', 'application/json');
+        .send(userRegistration);
 
       const res = await chai
         .request(app)
         .post(`${baseUrl}/signup`)
-        .send(userRegistration)
-        .set('Accept', 'application/json');
+        .send(userRegistration);
 
       expect(successfulSignUpRes).to.have.status(201);
       expect(res).to.have.status(409);
@@ -78,8 +58,7 @@ describe('Users endpoints', () => {
       const res = await chai
         .request(app)
         .post(`${baseUrl}/signin`)
-        .send({ email, password })
-        .set('Accept', 'application/json');
+        .send({ email, password });
 
       expect(res).to.have.status(404);
       expect(res.body).to.be.a('Object');
@@ -91,14 +70,12 @@ describe('Users endpoints', () => {
       const successfulSignUpRes = await chai
         .request(app)
         .post(`${baseUrl}/signup`)
-        .send(userRegistration)
-        .set('Accept', 'application/json');
+        .send(userRegistration);
 
       const res = await chai
         .request(app)
         .post(`${baseUrl}/signin`)
-        .send({ email, password: 'testpas90' })
-        .set('Accept', 'application/json');
+        .send({ email, password: 'testpas90' });
 
       expect(successfulSignUpRes).to.have.status(201);
       expect(res).to.have.status(401);
@@ -113,14 +90,12 @@ describe('Users endpoints', () => {
       const successfulSignUpRes = await chai
         .request(app)
         .post(`${baseUrl}/signup`)
-        .send(userRegistration)
-        .set('Accept', 'application/json');
+        .send(userRegistration);
 
       const res = await chai
         .request(app)
         .post(`${baseUrl}/signin`)
-        .send({ email, password })
-        .set('Accept', 'application/json');
+        .send({ email, password });
 
       expect(successfulSignUpRes).to.have.status(201);
       expect(res).to.have.status(200);
@@ -131,16 +106,5 @@ describe('Users endpoints', () => {
       expect(res.body.userData).to.have.property('id');
       expect(res.body.userData.email).to.be.eql(email);
     });
-  });
-
-  afterEach(async () => {
-    await mongoose.connection.collections.users.drop(async () => {
-      // this function runs after the drop is complete
-      console.log('users db dropped');
-    });
-  });
-
-  after(async () => {
-    await process.exit(0);
   });
 });
