@@ -200,7 +200,7 @@ describe('Bucketlists endpoints: api/v1/auth/bucketlists', () => {
     });
   });
 
-  describe('PUT: aapi/v1/auth/bucketlists', () => {
+  describe('PUT: api/v1/auth/bucketlists', () => {
     const bucketlistUpdateInfo = {
       name: 'Go to Nairobi',
       description: 'Visit nairobi National park',
