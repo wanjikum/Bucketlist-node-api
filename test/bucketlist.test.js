@@ -102,7 +102,7 @@ describe('Bucketlists endpoints: api/v1/auth/bucketlists', () => {
     });
   });
 
-  describe('GET: api/v1/auth/bucketlist', () => {
+  describe('GET: api/v1/auth/bucketlists', () => {
     it('Retrieves a bucketlist successfully', async () => {
       const userSignUpResponse = await chai
         .request(app)
@@ -200,7 +200,7 @@ describe('Bucketlists endpoints: api/v1/auth/bucketlists', () => {
     });
   });
 
-  describe('PUT: api/v1/auth/bucketlist', () => {
+  describe('PUT: aapi/v1/auth/bucketlists', () => {
     const bucketlistUpdateInfo = {
       name: 'Go to Nairobi',
       description: 'Visit nairobi National park',
@@ -305,7 +305,7 @@ describe('Bucketlists endpoints: api/v1/auth/bucketlists', () => {
     });
   });
 
-  describe('DELETE: api/v1/auth/bucketlist', () => {
+  describe('DELETE: api/v1/auth/bucketlists', () => {
     it('Deletes a bucketlist successfully', async () => {
       const userSignUpResponse = await chai
         .request(app)
@@ -400,6 +400,131 @@ describe('Bucketlists endpoints: api/v1/auth/bucketlists', () => {
       expect(res.body).to.be.a('Object');
       expect(res.body.success).to.be.eql(false);
       expect(res.body.message).to.be.eql(`Bucketlist with ${id} does not exist`);
+    });
+  });
+
+  describe('GET: api/v1/auth/bucketlists', () => {
+    it('Retrieves all bucketlists successfully', async () => {
+      const userSignUpResponse = await chai
+        .request(app)
+        .post(`${baseUrl}/signup`)
+        .send(userRegistration);
+
+      const { token } = userSignUpResponse.body.userData;
+
+      await chai
+        .request(app)
+        .post(`${baseUrl}/auth/bucketlists`)
+        .send(bucketlistInfo)
+        .set('Authorization', `Bearer ${token}`);
+
+      await chai
+        .request(app)
+        .post(`${baseUrl}/auth/bucketlists`)
+        .send({ ...bucketlistInfo, name: 'Visit Egypt' })
+        .set('Authorization', `Bearer ${token}`);
+
+      const res = await chai
+        .request(app)
+        .get(`${baseUrl}/auth/bucketlists/`)
+        .send(bucketlistInfo)
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(userSignUpResponse).to.have.status(201);
+      expect(userSignUpResponse.body.message).to.be.eql('Mickey has been created successfully.');
+      expect(res.body).to.be.a('Object');
+      expect(res.body.success).to.be.eql(true);
+      expect(res.body.message).to.be.eql('Bucketlist(s) retrieved successfully');
+      expect(res.body.bucketListData).to.have.lengthOf(2);
+    });
+
+    it('Paginates bucketlists successfully', async () => {
+      const userSignUpResponse = await chai
+        .request(app)
+        .post(`${baseUrl}/signup`)
+        .send(userRegistration);
+
+      const { token } = userSignUpResponse.body.userData;
+
+      await chai
+        .request(app)
+        .post(`${baseUrl}/auth/bucketlists`)
+        .send(bucketlistInfo)
+        .set('Authorization', `Bearer ${token}`);
+
+      await chai
+        .request(app)
+        .post(`${baseUrl}/auth/bucketlists`)
+        .send({ ...bucketlistInfo, name: 'Visit Egypt' })
+        .set('Authorization', `Bearer ${token}`);
+
+      await chai
+        .request(app)
+        .post(`${baseUrl}/auth/bucketlists`)
+        .send({ ...bucketlistInfo, name: 'Visit Uganda' })
+        .set('Authorization', `Bearer ${token}`);
+
+      await chai
+        .request(app)
+        .post(`${baseUrl}/auth/bucketlists`)
+        .send({ ...bucketlistInfo, name: 'Visit Tanzania' })
+        .set('Authorization', `Bearer ${token}`);
+
+      const res = await chai
+        .request(app)
+        .get(`${baseUrl}/auth/bucketlists/`)
+        .send(bucketlistInfo)
+        .set('Authorization', `Bearer ${token}`)
+        .query({ page: 1, limit: 2 });
+
+      expect(userSignUpResponse).to.have.status(201);
+      expect(userSignUpResponse.body.message).to.be.eql('Mickey has been created successfully.');
+      expect(res.body).to.be.a('Object');
+      expect(res.body.success).to.be.eql(true);
+      expect(res.body.message).to.be.eql('Bucketlist(s) retrieved and paginated successfully');
+      expect(res.body.bucketListData.docs).to.have.lengthOf(2);
+      expect(res.body.bucketListData.total).to.be.eql(4);
+      expect(res.body.bucketListData.limit).to.be.eql(2);
+      expect(res.body.bucketListData.page).to.be.eql(1);
+      expect(res.body.bucketListData.pages).to.be.eql(2);
+    });
+
+    it('Can not retrieve another users bucketlists', async () => {
+      const userSignUpResponse = await chai
+        .request(app)
+        .post(`${baseUrl}/signup`)
+        .send(userRegistration);
+
+      const { token } = userSignUpResponse.body.userData;
+
+      const user2SignUpResponse = await chai
+        .request(app)
+        .post(`${baseUrl}/signup`)
+        .send({ ...userRegistration, email: 'micky.mouse@gmail.com' });
+
+      const { token: token2 } = user2SignUpResponse.body.userData;
+
+      const postResponse = await chai
+        .request(app)
+        .post(`${baseUrl}/auth/bucketlists`)
+        .send(bucketlistInfo)
+        .set('Authorization', `Bearer ${token}`);
+
+      const res = await chai
+        .request(app)
+        .get(`${baseUrl}/auth/bucketlists/`)
+        .send(bucketlistInfo)
+        .set('Authorization', `Bearer ${token2}`);
+
+      expect(userSignUpResponse).to.have.status(201);
+      expect(userSignUpResponse.body.message).to.be.eql('Mickey has been created successfully.');
+      expect(postResponse.body.message).to.be.eql(
+        'Bucketlist Go to Nairobi has been created successfully',
+      );
+      expect(res.body).to.be.a('Object');
+      expect(res.body.success).to.be.eql(true);
+      expect(res.body.message).to.be.eql('Bucketlist(s) retrieved successfully');
+      expect(res.body.bucketListData).to.have.lengthOf(0);
     });
   });
 });
