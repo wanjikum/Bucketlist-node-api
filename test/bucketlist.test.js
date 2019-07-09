@@ -122,7 +122,6 @@ describe('Bucketlists endpoints: api/v1/auth/bucketlists', () => {
       const res = await chai
         .request(app)
         .get(`${baseUrl}/auth/bucketlists/${id}`)
-        .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`);
 
       expect(userSignUpResponse).to.have.status(201);
@@ -150,7 +149,6 @@ describe('Bucketlists endpoints: api/v1/auth/bucketlists', () => {
       const res = await chai
         .request(app)
         .get(`${baseUrl}/auth/bucketlists/eoiinnnn214`)
-        .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`);
 
       expect(userSignUpResponse).to.have.status(201);
@@ -186,7 +184,6 @@ describe('Bucketlists endpoints: api/v1/auth/bucketlists', () => {
       const res = await chai
         .request(app)
         .get(`${baseUrl}/auth/bucketlists/${id}`)
-        .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token2}`);
 
       expect(userSignUpResponse).to.have.status(201);
@@ -243,7 +240,7 @@ describe('Bucketlists endpoints: api/v1/auth/bucketlists', () => {
       expect(res.body.message).to.be.eql('Bucketlist updated successfully');
     });
 
-    it('Can not retrieve a bucketlist that has an invalid id', async () => {
+    it('Can not update a bucketlist that has an invalid id', async () => {
       const userSignUpResponse = await chai
         .request(app)
         .post(`${baseUrl}/signup`)
@@ -325,7 +322,6 @@ describe('Bucketlists endpoints: api/v1/auth/bucketlists', () => {
       const res = await chai
         .request(app)
         .delete(`${baseUrl}/auth/bucketlists/${id}`)
-        .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`);
 
       expect(userSignUpResponse).to.have.status(201);
@@ -353,7 +349,6 @@ describe('Bucketlists endpoints: api/v1/auth/bucketlists', () => {
       const res = await chai
         .request(app)
         .delete(`${baseUrl}/auth/bucketlists/eoiinnnn214`)
-        .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`);
 
       expect(userSignUpResponse).to.have.status(201);
@@ -389,7 +384,6 @@ describe('Bucketlists endpoints: api/v1/auth/bucketlists', () => {
       const res = await chai
         .request(app)
         .delete(`${baseUrl}/auth/bucketlists/${id}`)
-        .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token2}`);
 
       expect(userSignUpResponse).to.have.status(201);
@@ -473,7 +467,6 @@ describe('Bucketlists endpoints: api/v1/auth/bucketlists', () => {
       const res = await chai
         .request(app)
         .get(`${baseUrl}/auth/bucketlists/`)
-        .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`)
         .query({ page: 1, limit: 2 });
 
@@ -513,7 +506,6 @@ describe('Bucketlists endpoints: api/v1/auth/bucketlists', () => {
       const res = await chai
         .request(app)
         .get(`${baseUrl}/auth/bucketlists/`)
-        .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token2}`);
 
       expect(userSignUpResponse).to.have.status(201);
