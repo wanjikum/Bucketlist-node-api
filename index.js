@@ -14,6 +14,8 @@ mongoose.set('useNewUrlParser', true);
 mongoose.connect(config.DATABASE, { useNewUrlParser: true });
 const db = mongoose.connection;
 
+console.log('config>>>>', config);
+
 db.on('error', () => {
   if (process.env.NODE_ENV === 'development') {
     console.log('Failed to establish connection');

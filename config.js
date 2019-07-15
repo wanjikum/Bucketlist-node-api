@@ -22,7 +22,7 @@ const staging = {
 
 const production = {
   SECRET: process.env.PRODUCTION_SECRET,
-  DATABASE: process.env.PRODUCTION_DATABSE,
+  DATABASE: process.env.PRODUCTION_DATABASE,
   PORT: process.env.PRODUCTION_PORT,
 };
 
