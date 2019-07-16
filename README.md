@@ -13,18 +13,20 @@ It's an API that is used to store a list of things that one has not done before 
 
 ## Endpoints
 
-| EndPoint                                                    | Functionality                     |
-| :---------------------------------------------------------- | :-------------------------------- |
-| `POST /api/v1/auth/signin`                                  | Logs a user in                    |
-| `POST /api/v1/auth/signup`                                  | Register a user                   |
-| `POST /api/v1/bucketlists/`                                 | Logs a user in                    |
-| `GET /api/v1/bucketlists/`                                  | List all the created bucket lists |
-| `GET /api/v1/bucketlists/<id>`                              | Get single bucket list            |
-| `PUT /api/v1/bucketlists/<id>`                              | Update this bucket list           |
-| `DELETE /api/v1/bucketlists/<id>`                           | Delete this single bucket list    |
-| `POST /api/v1/bucketlists/<id>/bucketlistItems/`            | Create a new item in bucket list  |
-| `PUT /api/v1/bucketlists/<id>/bucketlistItems/<item_id>`    | Update a bucket list item         |
-| `DELETE /api/v1/bucketlists/<id>/bucketlistItems/<item_id>` | Delete an item in a bucket list   |
+| EndPoint                                                          | Functionality                                |
+| :---------------------------------------------------------------- | :------------------------------------------- |
+| `POST /api/v1/auth/signin`                                        | Logs a user in                               |
+| `POST /api/v1/auth/signup`                                        | Register a user                              |
+| `POST /api/v1/bucketlists/`                                       | Logs a user in                               |
+| `GET /api/v1/bucketlists/`                                        | Lists all the created bucket lists           |
+| `GET /api/v1/bucketlists?limit=<limit number>&page=<page number>` | Paginates all the created bucket lists       |
+| `GET /api/v1/bucketlists/<id>`                                    | Get single bucket list                       |
+| `PUT /api/v1/bucketlists/<id>`                                    | Update this bucket list                      |
+| `DELETE /api/v1/bucketlists/<id>`                                 | Delete this single bucket list               |
+| `GET /api/v1/bucketlists/<id>/bucketlistItems/?limit=1&page=2`    | Paginates all the created bucket lists items |
+| `POST /api/v1/bucketlists/<id>/bucketlistItems/`                  | Create a new item in bucket list             |
+| `PUT /api/v1/bucketlists/<id>/bucketlistItems/<item_id>`          | Update a bucket list item                    |
+| `DELETE /api/v1/bucketlists/<id>/bucketlistItems/<item_id>`       | Delete an item in a bucket list              |
 
 ## GETTING STARTED:
 
@@ -51,19 +53,19 @@ It's an API that is used to store a list of things that one has not done before 
 4. Create a .env file with the following details. You can modify them if you wish to.
 
 ```
-$ DEV_SECRET=myDevEnvSecretKey
-$ DEV_DATABASE='mongodb://127.0.0.1/bucketlist_db'
-$ DEV_PORT=5000
+   $ DEV_SECRET=myDevEnvSecretKey
+   $ DEV_DATABASE='mongodb://127.0.0.1/bucketlist_db'
+   $ DEV_PORT=5000
 
 
-$ TEST_SECRET=myTestEnvSecretKey
-$ TEST_DATABASE='mongodb:/127.0.0.1/test_bucketlist_db'
-$ TEST_PORT=5001
+   $ TEST_SECRET=myTestEnvSecretKey
+   $ TEST_DATABASE='mongodb:/127.0.0.1/test_bucketlist_db'
+   $ TEST_PORT=5001
 
 
-$ PRODUCTION_SECRET=myProductionEnvSecretKey
-$ PRODUCTION_DATABASE='mongodb:/127.0.0.1/production_bucketlist_db'
-$ PRODUCTION_PORT=5002
+   $ PRODUCTION_SECRET=myProductionEnvSecretKey
+   $ PRODUCTION_DATABASE='mongodb:/127.0.0.1/production_bucketlist_db'
+   $ PRODUCTION_PORT=5002
 ```
 
 5. Start the server
@@ -85,4 +87,4 @@ npm run test
 
 ## Swagger documentation
 
-The app is currently documented using swagger 2.0 and the Open API Specification found [Here](https://www.google.com)
+The app is currently documented using swagger 2.0 and the Open API Specification found [here](https://www.google.com)
