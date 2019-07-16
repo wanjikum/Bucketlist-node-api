@@ -3,7 +3,7 @@ import { expect } from 'chai';
 
 import bucketListItemSchema, {
   bucketListItemUpdateSchema,
-} from '../controllers/bucketlist-items/bucketlist-item-schema';
+} from '../server/controllers/bucketlist-items/bucketlist-item-schema';
 
 describe('bucketListItemSchemas', () => {
   describe('bucketListItemSchema', () => {

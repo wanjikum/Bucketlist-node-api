@@ -5,9 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV='testing' ./node_modules/.bin/mocha --require @babel/register",
-    "start": "babel-node index.js",
-    "dev": "nodemon --exec babel-node index.js",
-    "lint": "./node_modules/.bin/eslint"
+    "start": "npm run build && node ./build/index.js",
+    "dev": "nodemon --exec babel-node server/index.js",
+    "lint": "./node_modules/.bin/eslint",
+    "build-babel": "babel src -d build",
+    "clean": "rm -rf build && mkdir build",
+    "build": "npm run clean && npm run build-babel"
   },
   "repository": {
     "type": "git",
@@ -32,7 +35,8 @@
     "morgan": "1.9.1"
   },
   "devDependencies": {
-    "@babel/core": "7.4.4",
+    "@babel/cli": "7.5.0",
+    "@babel/core": "7.5.4",
     "@babel/node": "7.2.2",
     "@babel/preset-env": "7.4.4",
     "chai": "4.2.0",

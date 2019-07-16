@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import UserModel from '../../models/users';
 import hashPassword from '../utils/hash-password';
-import config from '../../config';
+import config from '../../config/config';
 
 // generate token
 const generateToken = id => jwt.sign({ id }, config.SECRET, {

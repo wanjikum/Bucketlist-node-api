@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import { expect } from 'chai';
 
-import UserSchema from '../controllers/users/user-schema';
+import UserSchema from '../server/controllers/users/user-schema';
 
 describe('UserSchema', () => {
   const { userSignUpSchema, userLogInSchema } = UserSchema;
