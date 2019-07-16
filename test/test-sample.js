@@ -8,18 +8,18 @@ before((done) => {
 
   mongoose.connection
     .once('open', () => {
-      console.log('Connected to MongoDB!');
+      // console.log('Connected to MongoDB!');
       done();
     })
     .on('error', () => {
-      console.log('Connection error : ');
+      // console.log('Connection error : ');
     });
 });
 
 afterEach(async () => {
   await mongoose.connection.collections.users.drop(async () => {
     // this function runs after the drop is complete
-    console.log('users db dropped');
+    // console.log('users db dropped');
   });
 });
 
