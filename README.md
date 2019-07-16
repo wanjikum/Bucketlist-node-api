@@ -53,19 +53,19 @@ It's an API that is used to store a list of things that one has not done before 
 4. Create a .env file with the following details. You can modify them if you wish to.
 
 ```
-   $ DEV_SECRET=myDevEnvSecretKey
-   $ DEV_DATABASE='mongodb://127.0.0.1/bucketlist_db'
-   $ DEV_PORT=5000
+  DEV_SECRET=myDevEnvSecretKey
+  DEV_DATABASE='mongodb://127.0.0.1/bucketlist_db'
+  DEV_PORT=5000
 
 
-   $ TEST_SECRET=myTestEnvSecretKey
-   $ TEST_DATABASE='mongodb:/127.0.0.1/test_bucketlist_db'
-   $ TEST_PORT=5001
+  TEST_SECRET=myTestEnvSecretKey
+  TEST_DATABASE='mongodb:/127.0.0.1/test_bucketlist_db'
+  TEST_PORT=5001
 
 
-   $ PRODUCTION_SECRET=myProductionEnvSecretKey
-   $ PRODUCTION_DATABASE='mongodb:/127.0.0.1/production_bucketlist_db'
-   $ PRODUCTION_PORT=5002
+  PRODUCTION_SECRET=myProductionEnvSecretKey
+  PRODUCTION_DATABASE='mongodb:/127.0.0.1/production_bucketlist_db'
+  PRODUCTION_PORT=5002
 ```
 
 5. Start the server
@@ -80,10 +80,9 @@ It's an API that is used to store a list of things that one has not done before 
 
 Assuming you have already done step 1 - 4 above, you can just run this command:
 
-```
-npm run test
-
-```
+   ```
+   $ npm run test
+   ```
 
 ## Swagger documentation
 
