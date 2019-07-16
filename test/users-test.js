@@ -15,11 +15,11 @@ const userRegistration = {
 };
 
 describe('Users endpoints', () => {
-  describe('user sign up: api/v1/signup', () => {
+  describe('user sign up: api/v1/auth/signup', () => {
     it('Can create a user', async () => {
       const res = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       expect(res).to.have.status(201);
@@ -34,12 +34,12 @@ describe('Users endpoints', () => {
     it('Can not create a user twice', async () => {
       const successfulSignUpRes = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       const res = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       expect(successfulSignUpRes).to.have.status(201);
@@ -52,12 +52,12 @@ describe('Users endpoints', () => {
     });
   });
 
-  describe('user sign in: api/v1/signin', () => {
+  describe('user sign in: api/v1/auth/signin', () => {
     const { email, password } = userRegistration;
     it('Can not give a non registered user access', async () => {
       const res = await chai
         .request(app)
-        .post(`${baseUrl}/signin`)
+        .post(`${baseUrl}/auth/signin`)
         .send({ email, password });
 
       expect(res).to.have.status(404);
@@ -69,12 +69,12 @@ describe('Users endpoints', () => {
     it('Can not give a registered user access if password is incorrect', async () => {
       const successfulSignUpRes = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       const res = await chai
         .request(app)
-        .post(`${baseUrl}/signin`)
+        .post(`${baseUrl}/auth/signin`)
         .send({ email, password: 'testpas90' });
 
       expect(successfulSignUpRes).to.have.status(201);
@@ -89,12 +89,12 @@ describe('Users endpoints', () => {
     it('Can grant user access if registered', async () => {
       const successfulSignUpRes = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       const res = await chai
         .request(app)
-        .post(`${baseUrl}/signin`)
+        .post(`${baseUrl}/auth/signin`)
         .send({ email, password });
 
       expect(successfulSignUpRes).to.have.status(201);

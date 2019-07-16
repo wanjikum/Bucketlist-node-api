@@ -41,37 +41,33 @@ router.get('/', (req, res) => {
   res.status(200).send({ message: 'Welcome to the Bucketlist API' });
 });
 
-router.post('/signup', validateData('body', userSignUpSchema), createUser);
-router.post('/signin', validateData('body', userLogInSchema), userLogin);
-router.post('/auth/bucketlists', auth, validateData('body', bucketlistSchema), createBucketList);
-router.get('/auth/bucketlists/:id', auth, getbucketList);
-router.get('/auth/bucketlists', auth, getBucketLists);
+router.post('/auth/signup', validateData('body', userSignUpSchema), createUser);
+router.post('/auth/signin', validateData('body', userLogInSchema), userLogin);
+router.post('/bucketlists', auth, validateData('body', bucketlistSchema), createBucketList);
+router.get('/bucketlists/:id', auth, getbucketList);
+router.get('/bucketlists', auth, getBucketLists);
 router.put(
-  '/auth/bucketlists/:id',
+  '/bucketlists/:id',
   auth,
   validateData('body', bucketlistUpdateSchema),
   updateBucketList,
 );
-router.delete('/auth/bucketlists/:id', auth, deleteBucketList);
+router.delete('/bucketlists/:id', auth, deleteBucketList);
 router.post(
-  '/auth/bucketlists/:id/bucketlistItems/',
+  '/bucketlists/:id/bucketlistItems/',
   auth,
   validateData('body', bucketListItemSchema),
   createBucketListItem,
 );
-router.get('/auth/bucketlists/:id/bucketlistItems/', auth, getBucketListItems);
-router.get('/auth/bucketlists/:id/bucketlistItems/:bucketlistItemId', auth, getbucketListItem);
+router.get('/bucketlists/:id/bucketlistItems/', auth, getBucketListItems);
+router.get('/bucketlists/:id/bucketlistItems/:bucketlistItemId', auth, getbucketListItem);
 router.put(
-  '/auth/bucketlists/:id/bucketlistItems/:bucketlistItemId',
+  '/bucketlists/:id/bucketlistItems/:bucketlistItemId',
   auth,
   validateData('body', bucketListItemUpdateSchema),
   updateBucketListItem,
 );
-router.delete(
-  '/auth/bucketlists/:id/bucketlistItems/:bucketlistItemId',
-  auth,
-  deleteBucketListItem,
-);
+router.delete('/bucketlists/:id/bucketlistItems/:bucketlistItemId', auth, deleteBucketListItem);
 
 router.get('*', (req, res) => {
   res.status(404).send({ message: 'Route not found' });

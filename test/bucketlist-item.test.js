@@ -26,18 +26,18 @@ describe('Bucketlist items endpoints', () => {
     status: 'to do',
   };
 
-  describe('POST: /auth/bucketlists/:id/bucketlistItems/', () => {
+  describe('POST: /bucketlists/:id/bucketlistItems/', () => {
     it('Creates a new bucketlist item', async () => {
       const userSignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       const { token } = userSignUpResponse.body.userData;
 
       const bucketlistDataInfo = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists`)
+        .post(`${baseUrl}/bucketlists`)
         .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -45,7 +45,7 @@ describe('Bucketlist items endpoints', () => {
 
       const res = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .post(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .send(bucketlistItemInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -66,14 +66,14 @@ describe('Bucketlist items endpoints', () => {
     it('Can not create a bucketlist item twice', async () => {
       const userSignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       const { token } = userSignUpResponse.body.userData;
 
       const bucketlistDataInfo = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists`)
+        .post(`${baseUrl}/bucketlists`)
         .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -81,13 +81,13 @@ describe('Bucketlist items endpoints', () => {
 
       await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .post(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .send(bucketlistItemInfo)
         .set('Authorization', `Bearer ${token}`);
 
       const res = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .post(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .send(bucketlistItemInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -99,18 +99,18 @@ describe('Bucketlist items endpoints', () => {
     });
   });
 
-  describe('GET: /auth/bucketlists/:id/bucketlistItems/:id', () => {
+  describe('GET: /bucketlists/:id/bucketlistItems/:id', () => {
     it('Retrieves a bucketlist item successfully', async () => {
       const userSignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       const { token } = userSignUpResponse.body.userData;
 
       const bucketlistDataInfo = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists`)
+        .post(`${baseUrl}/bucketlists`)
         .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -118,7 +118,7 @@ describe('Bucketlist items endpoints', () => {
 
       const postResponse = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .post(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .send(bucketlistItemInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -126,7 +126,7 @@ describe('Bucketlist items endpoints', () => {
 
       const res = await chai
         .request(app)
-        .get(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/${bucketlistItemId}`)
+        .get(`${baseUrl}/bucketlists/${id}/bucketlistItems/${bucketlistItemId}`)
         .set('Authorization', `Bearer ${token}`);
 
       expect(res.body).to.be.a('Object');
@@ -142,14 +142,14 @@ describe('Bucketlist items endpoints', () => {
     it('Can not retrieve a bucketlist item that has an invalid id', async () => {
       const userSignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       const { token } = userSignUpResponse.body.userData;
 
       const bucketlistDataInfo = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists`)
+        .post(`${baseUrl}/bucketlists`)
         .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -157,7 +157,7 @@ describe('Bucketlist items endpoints', () => {
 
       const res = await chai
         .request(app)
-        .get(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/eeeuuhvhgve1233`)
+        .get(`${baseUrl}/bucketlists/${id}/bucketlistItems/eeeuuhvhgve1233`)
         .set('Authorization', `Bearer ${token}`);
 
       expect(res.body).to.be.a('Object');
@@ -168,21 +168,21 @@ describe('Bucketlist items endpoints', () => {
     it('Can not retrieve another users bucketlist', async () => {
       const userSignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       const { token } = userSignUpResponse.body.userData;
 
       const user2SignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send({ ...userRegistration, email: 'milly.mouse@gmail.com' });
 
       const { token: token2 } = user2SignUpResponse.body.userData;
 
       const bucketlistDataInfo = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists`)
+        .post(`${baseUrl}/bucketlists`)
         .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -190,7 +190,7 @@ describe('Bucketlist items endpoints', () => {
 
       const postResponse = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .post(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .send(bucketlistItemInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -198,7 +198,7 @@ describe('Bucketlist items endpoints', () => {
 
       const res = await chai
         .request(app)
-        .get(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/${bucketlistItemId}`)
+        .get(`${baseUrl}/bucketlists/${id}/bucketlistItems/${bucketlistItemId}`)
         .set('Authorization', `Bearer ${token2}`);
 
       expect(userSignUpResponse).to.have.status(201);
@@ -210,7 +210,7 @@ describe('Bucketlist items endpoints', () => {
     });
   });
 
-  describe('PUT: /auth/bucketlists/:id/bucketlistItems/:id', () => {
+  describe('PUT: /bucketlists/:id/bucketlistItems/:id', () => {
     const bucketlistItemUpdateInfo = {
       name: 'Go to Kitale',
       status: 'to do',
@@ -219,14 +219,14 @@ describe('Bucketlist items endpoints', () => {
     it('Updates a bucketlist item successfully', async () => {
       const userSignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       const { token } = userSignUpResponse.body.userData;
 
       const bucketlistDataInfo = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists`)
+        .post(`${baseUrl}/bucketlists`)
         .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -234,7 +234,7 @@ describe('Bucketlist items endpoints', () => {
 
       const postResponse = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .post(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .send(bucketlistItemInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -242,7 +242,7 @@ describe('Bucketlist items endpoints', () => {
 
       const res = await chai
         .request(app)
-        .put(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/${bucketlistItemId}`)
+        .put(`${baseUrl}/bucketlists/${id}/bucketlistItems/${bucketlistItemId}`)
         .send(bucketlistItemUpdateInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -259,14 +259,14 @@ describe('Bucketlist items endpoints', () => {
     it('Can not update a bucketlist that has an invalid id', async () => {
       const userSignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       const { token } = userSignUpResponse.body.userData;
 
       const bucketlistDataInfo = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists`)
+        .post(`${baseUrl}/bucketlists`)
         .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -274,7 +274,7 @@ describe('Bucketlist items endpoints', () => {
 
       const res = await chai
         .request(app)
-        .put(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/eeeuuhvhgve1233`)
+        .put(`${baseUrl}/bucketlists/${id}/bucketlistItems/eeeuuhvhgve1233`)
         .send(bucketlistItemInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -286,21 +286,21 @@ describe('Bucketlist items endpoints', () => {
     it('Can not update another users bucketlist', async () => {
       const userSignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       const { token } = userSignUpResponse.body.userData;
 
       const user2SignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send({ ...userRegistration, email: 'milly.mouse@gmail.com' });
 
       const { token: token2 } = user2SignUpResponse.body.userData;
 
       const bucketlistDataInfo = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists`)
+        .post(`${baseUrl}/bucketlists`)
         .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -308,7 +308,7 @@ describe('Bucketlist items endpoints', () => {
 
       const postResponse = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .post(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .send(bucketlistItemInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -316,7 +316,7 @@ describe('Bucketlist items endpoints', () => {
 
       const res = await chai
         .request(app)
-        .put(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/${bucketlistItemId}`)
+        .put(`${baseUrl}/bucketlists/${id}/bucketlistItems/${bucketlistItemId}`)
         .send(bucketlistItemUpdateInfo)
         .set('Authorization', `Bearer ${token2}`);
 
@@ -329,18 +329,18 @@ describe('Bucketlist items endpoints', () => {
     });
   });
 
-  describe('DELETE: /auth/bucketlists/:id/bucketlistItems/:id', () => {
+  describe('DELETE: /bucketlists/:id/bucketlistItems/:id', () => {
     it('Deletes a bucketlist item successfully', async () => {
       const userSignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       const { token } = userSignUpResponse.body.userData;
 
       const bucketlistDataInfo = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists`)
+        .post(`${baseUrl}/bucketlists`)
         .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -348,7 +348,7 @@ describe('Bucketlist items endpoints', () => {
 
       const postResponse = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .post(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .send(bucketlistItemInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -356,7 +356,7 @@ describe('Bucketlist items endpoints', () => {
 
       const res = await chai
         .request(app)
-        .delete(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/${bucketlistItemId}`)
+        .delete(`${baseUrl}/bucketlists/${id}/bucketlistItems/${bucketlistItemId}`)
         .set('Authorization', `Bearer ${token}`);
 
       expect(res.body).to.be.a('Object');
@@ -372,14 +372,14 @@ describe('Bucketlist items endpoints', () => {
     it('Can not delete a bucketlist item that has an invalid id', async () => {
       const userSignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       const { token } = userSignUpResponse.body.userData;
 
       const res = await chai
         .request(app)
-        .delete(`${baseUrl}/auth/bucketlists/eoiinnnn214`)
+        .delete(`${baseUrl}/bucketlists/eoiinnnn214`)
         .set('Authorization', `Bearer ${token}`);
 
       expect(userSignUpResponse).to.have.status(201);
@@ -392,21 +392,21 @@ describe('Bucketlist items endpoints', () => {
     it('Can not delete another users bucketlist item', async () => {
       const userSignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       const { token } = userSignUpResponse.body.userData;
 
       const user2SignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send({ ...userRegistration, email: 'milly.mouse@gmail.com' });
 
       const { token: token2 } = user2SignUpResponse.body.userData;
 
       const bucketlistDataInfo = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists`)
+        .post(`${baseUrl}/bucketlists`)
         .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -414,7 +414,7 @@ describe('Bucketlist items endpoints', () => {
 
       const postResponse = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .post(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .send(bucketlistItemInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -422,7 +422,7 @@ describe('Bucketlist items endpoints', () => {
 
       const res = await chai
         .request(app)
-        .put(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/${bucketlistItemId}`)
+        .put(`${baseUrl}/bucketlists/${id}/bucketlistItems/${bucketlistItemId}`)
         .set('Authorization', `Bearer ${token2}`);
 
       expect(userSignUpResponse).to.have.status(201);
@@ -434,18 +434,18 @@ describe('Bucketlist items endpoints', () => {
     });
   });
 
-  describe('GET:  /auth/bucketlists/:id/bucketlistItems/', () => {
+  describe('GET:  /bucketlists/:id/bucketlistItems/', () => {
     it('Retrieves all bucketlist items successfully', async () => {
       const userSignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       const { token } = userSignUpResponse.body.userData;
 
       const bucketlistDataInfo = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists`)
+        .post(`${baseUrl}/bucketlists`)
         .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -453,19 +453,19 @@ describe('Bucketlist items endpoints', () => {
 
       await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .post(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .send(bucketlistItemInfo)
         .set('Authorization', `Bearer ${token}`);
 
       await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .post(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .send({ ...bucketlistItemInfo, name: 'Go to busia' })
         .set('Authorization', `Bearer ${token}`);
 
       const res = await chai
         .request(app)
-        .get(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .get(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .set('Authorization', `Bearer ${token}`);
 
       expect(userSignUpResponse).to.have.status(201);
@@ -479,14 +479,14 @@ describe('Bucketlist items endpoints', () => {
     it('Paginates bucketlist items successfully', async () => {
       const userSignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       const { token } = userSignUpResponse.body.userData;
 
       const bucketlistDataInfo = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists`)
+        .post(`${baseUrl}/bucketlists`)
         .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -494,31 +494,31 @@ describe('Bucketlist items endpoints', () => {
 
       await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .post(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .send(bucketlistItemInfo)
         .set('Authorization', `Bearer ${token}`);
 
       await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .post(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .send({ ...bucketlistItemInfo, name: 'Go to busia' })
         .set('Authorization', `Bearer ${token}`);
 
       await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .post(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .send({ ...bucketlistItemInfo, name: 'Go to eldoret' })
         .set('Authorization', `Bearer ${token}`);
 
       await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .post(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .send({ ...bucketlistItemInfo, name: 'Go to nakuru' })
         .set('Authorization', `Bearer ${token}`);
 
       const res = await chai
         .request(app)
-        .get(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .get(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .set('Authorization', `Bearer ${token}`)
         .query({ page: 1, limit: 2 });
 
@@ -537,21 +537,21 @@ describe('Bucketlist items endpoints', () => {
     it('Can not retrieve another users bucketlists items', async () => {
       const userSignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send(userRegistration);
 
       const { token } = userSignUpResponse.body.userData;
 
       const user2SignUpResponse = await chai
         .request(app)
-        .post(`${baseUrl}/signup`)
+        .post(`${baseUrl}/auth/signup`)
         .send({ ...userRegistration, email: 'micky.mouse@gmail.com' });
 
       const { token: token2 } = user2SignUpResponse.body.userData;
 
       const bucketlistDataInfo = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists`)
+        .post(`${baseUrl}/bucketlists`)
         .send(bucketlistInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -559,7 +559,7 @@ describe('Bucketlist items endpoints', () => {
 
       const bucketlistItemData = await chai
         .request(app)
-        .post(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/`)
+        .post(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .send(bucketlistItemInfo)
         .set('Authorization', `Bearer ${token}`);
 
@@ -567,7 +567,7 @@ describe('Bucketlist items endpoints', () => {
 
       const res = await chai
         .request(app)
-        .get(`${baseUrl}/auth/bucketlists/${id}/bucketlistItems/${bucketlistItemId}`)
+        .get(`${baseUrl}/bucketlists/${id}/bucketlistItems/${bucketlistItemId}`)
         .set('Authorization', `Bearer ${token2}`);
 
       expect(userSignUpResponse).to.have.status(201);
