@@ -88,3 +88,7 @@ npm run test
 ## Swagger documentation
 
 The app is currently documented using swagger 2.0 and the Open API Specification found [here](https://www.google.com)
+
+# Author
+
+Wanjiku
