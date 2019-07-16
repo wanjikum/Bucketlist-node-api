@@ -80,10 +80,9 @@ It's an API that is used to store a list of things that one has not done before 
 
 Assuming you have already done step 1 - 4 above, you can just run this command:
 
-```
-npm run test
-
-```
+   ```
+   $ npm run test
+   ```
 
 ## Swagger documentation
 
