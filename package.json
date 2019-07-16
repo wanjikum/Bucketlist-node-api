@@ -6,7 +6,7 @@
   "scripts": {
     "test": "NODE_ENV='testing' ./node_modules/.bin/mocha --require @babel/register",
     "start": "npm run build && node ./build/index.js",
-    "dev": "nodemon --exec babel-node index.js",
+    "dev": "nodemon --exec babel-node server/index.js",
     "lint": "./node_modules/.bin/eslint",
     "build-babel": "babel src -d build",
     "clean": "rm -rf build && mkdir build",
