@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/travis-ci/travis-web.svg?branch=master)](https://travis-ci.org/travis-ci/travis-web)
+
 # BucketList Application API
 
 It's an API that is used to store a list of things that one has not done before but wants to do before dying. It's CRUD API app built on node, express and MongoDB.
