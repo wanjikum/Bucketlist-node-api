@@ -93,6 +93,7 @@ describe('Bucketlist items endpoints', () => {
 
       expect(userSignUpResponse).to.have.status(201);
       expect(res.body).to.be.a('Object');
+      expect(res).to.have.status(409);
       expect(userSignUpResponse.body.message).to.be.eql('Mickey has been created successfully.');
       expect(res.body.success).to.be.eql(false);
       expect(res.body.message).to.be.eql('Bucketlist already exists');
@@ -136,6 +137,7 @@ describe('Bucketlist items endpoints', () => {
       expect(res.body.bucketListItemData).to.have.property('bucketlistId');
       expect(res.body.bucketListItemData).to.have.property('userId');
       expect(res.body.success).to.be.eql(true);
+      expect(res).to.have.status(200);
       expect(res.body.message).to.be.eql('BucketlistItem(s) retrieved successfully');
     });
 
@@ -160,12 +162,15 @@ describe('Bucketlist items endpoints', () => {
         .get(`${baseUrl}/bucketlists/${id}/bucketlistItems/eeeuuhvhgve1233`)
         .set('Authorization', `Bearer ${token}`);
 
+      expect(userSignUpResponse).to.have.status(201);
+      expect(userSignUpResponse.body.message).to.be.eql('Mickey has been created successfully.');
       expect(res.body).to.be.a('Object');
+      expect(res).to.have.status(400);
       expect(res.body.success).to.be.eql(false);
-      expect(res.body.message).to.be.eql('Server error');
+      expect(res.body.message).to.be.eql('The bucketlist item id provided is not valid');
     });
 
-    it('Can not retrieve another users bucketlist', async () => {
+    it('Can not retrieve another users bucketlist item', async () => {
       const userSignUpResponse = await chai
         .request(app)
         .post(`${baseUrl}/auth/signup`)
@@ -204,6 +209,7 @@ describe('Bucketlist items endpoints', () => {
       expect(userSignUpResponse).to.have.status(201);
       expect(userSignUpResponse.body.message).to.be.eql('Mickey has been created successfully.');
       expect(res.body).to.be.a('Object');
+      expect(res).to.have.status(404);
       expect(res.body.message).to.be.eql(
         `BucketlistItem with id ${bucketlistItemId} does not exist`,
       );
@@ -278,9 +284,12 @@ describe('Bucketlist items endpoints', () => {
         .send(bucketlistItemInfo)
         .set('Authorization', `Bearer ${token}`);
 
+      expect(userSignUpResponse).to.have.status(201);
+      expect(userSignUpResponse.body.message).to.be.eql('Mickey has been created successfully.');
       expect(res.body).to.be.a('Object');
+      expect(res).to.have.status(400);
       expect(res.body.success).to.be.eql(false);
-      expect(res.body.message).to.be.eql('Server error');
+      expect(res.body.message).to.be.eql('The bucketlist item id provided is not valid');
     });
 
     it('Can not update another users bucketlist', async () => {
@@ -323,6 +332,7 @@ describe('Bucketlist items endpoints', () => {
       expect(userSignUpResponse).to.have.status(201);
       expect(userSignUpResponse.body.message).to.be.eql('Mickey has been created successfully.');
       expect(res.body).to.be.a('Object');
+      expect(res).to.have.status(404);
       expect(res.body.message).to.be.eql(
         `BucketlistItem with id ${bucketlistItemId} does not exist`,
       );
@@ -377,16 +387,25 @@ describe('Bucketlist items endpoints', () => {
 
       const { token } = userSignUpResponse.body.userData;
 
+      const bucketlistDataInfo = await chai
+        .request(app)
+        .post(`${baseUrl}/bucketlists`)
+        .send(bucketlistInfo)
+        .set('Authorization', `Bearer ${token}`);
+
+      const { _id: id } = bucketlistDataInfo.body.bucketListData;
+
       const res = await chai
         .request(app)
-        .delete(`${baseUrl}/bucketlists/eoiinnnn214`)
+        .delete(`${baseUrl}/bucketlists/${id}/bucketlistItems/hhh`)
         .set('Authorization', `Bearer ${token}`);
 
       expect(userSignUpResponse).to.have.status(201);
       expect(userSignUpResponse.body.message).to.be.eql('Mickey has been created successfully.');
       expect(res.body).to.be.a('Object');
+      expect(res).to.have.status(400);
       expect(res.body.success).to.be.eql(false);
-      expect(res.body.message).to.be.eql('Failed');
+      expect(res.body.message).to.be.eql('The bucketlist item id provided is not valid');
     });
 
     it('Can not delete another users bucketlist item', async () => {
@@ -428,6 +447,7 @@ describe('Bucketlist items endpoints', () => {
       expect(userSignUpResponse).to.have.status(201);
       expect(userSignUpResponse.body.message).to.be.eql('Mickey has been created successfully.');
       expect(res.body).to.be.a('Object');
+      expect(res).to.have.status(404);
       expect(res.body.message).to.be.eql(
         `BucketlistItem with id ${bucketlistItemId} does not exist`,
       );
@@ -557,17 +577,15 @@ describe('Bucketlist items endpoints', () => {
 
       const { _id: id } = bucketlistDataInfo.body.bucketListData;
 
-      const bucketlistItemData = await chai
+      await chai
         .request(app)
         .post(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .send(bucketlistItemInfo)
         .set('Authorization', `Bearer ${token}`);
 
-      const { _id: bucketlistItemId } = bucketlistItemData.body.bucketListItemData;
-
       const res = await chai
         .request(app)
-        .get(`${baseUrl}/bucketlists/${id}/bucketlistItems/${bucketlistItemId}`)
+        .get(`${baseUrl}/bucketlists/${id}/bucketlistItems/`)
         .set('Authorization', `Bearer ${token2}`);
 
       expect(userSignUpResponse).to.have.status(201);
@@ -576,10 +594,8 @@ describe('Bucketlist items endpoints', () => {
         'Bucketlist Go to Kisumu has been created successfully',
       );
       expect(res.body).to.be.a('Object');
-      expect(res.body.success).to.be.eql(true);
-      expect(res.body.message).to.be.eql(
-        `BucketlistItem with id ${bucketlistItemId} does not exist`,
-      );
+      expect(res).to.have.status(404);
+      expect(res.body.message).to.be.eql('No bucketlist items available');
     });
   });
 });

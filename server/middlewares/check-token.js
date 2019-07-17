@@ -11,7 +11,7 @@ const checkToken = (req, res, next) => {
   if (token) {
     jwt.verify(token, config.SECRET, (err, user) => {
       if (err) {
-        return res.json({
+        return res.status(403).json({
           success: false,
           message: 'Token is not valid',
         });
@@ -20,7 +20,7 @@ const checkToken = (req, res, next) => {
       next();
     });
   } else {
-    return res.json({
+    return res.status(403).json({
       success: false,
       message: 'Auth token is not supplied',
     });

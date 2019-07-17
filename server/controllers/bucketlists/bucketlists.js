@@ -1,5 +1,10 @@
 import BucketListModel from '../../models/bucketlist';
 
+const getStatusCode = bucketList => (bucketList ? 200 : 404);
+const successValue = bucketList => (bucketList ? { success: true, bucketListData: bucketList } : {});
+const getSuccessPaginationValues = bucketList => (bucketList.docs.length ? { success: true, bucketListData: bucketList } : {});
+const getSuccessValues = bucketList => (bucketList.length ? { success: true, bucketListData: bucketList } : {});
+
 const createBucketList = (req, res) => {
   const bucketlistData = { ...req.body, userId: req.userId };
 
@@ -30,9 +35,8 @@ const getbucketList = (req, res) => {
     if (err) {
       res.status(500).send({ success: false, message: 'Server Error' });
     } else {
-      res.status(200).send({
-        success: !!bucketList,
-        bucketListData: bucketList || {},
+      res.status(getStatusCode(bucketList)).send({
+        ...successValue(bucketList),
         message: bucketList
           ? 'Bucketlist retrieved successfully'
           : `Bucketlist with id ${req.params.id} does not exist`,
@@ -50,10 +54,11 @@ const getBucketLists = (req, res) => {
       if (err) {
         res.status(500).send({ success: false, message: err });
       } else {
-        res.status(200).send({
-          success: true,
-          bucketListData: bucketLists || [],
-          message: 'Bucketlist(s) retrieved and paginated successfully',
+        res.status(getStatusCode(bucketLists.docs.length)).send({
+          ...getSuccessPaginationValues(bucketLists),
+          message: bucketLists.docs.length
+            ? 'Bucketlist(s) retrieved and paginated successfully'
+            : 'No bucketlist(s) available',
         });
       }
     });
@@ -62,10 +67,11 @@ const getBucketLists = (req, res) => {
       if (err) {
         res.status(500).send({ success: false, message: err });
       } else {
-        res.status(200).send({
-          success: true,
-          bucketListData: bucketLists || [],
-          message: 'Bucketlist(s) retrieved successfully',
+        res.status(getStatusCode(bucketLists.length)).send({
+          ...getSuccessValues(bucketLists),
+          message: bucketLists.length
+            ? 'Bucketlist(s) retrieved successfully'
+            : 'No bucketlist(s) available',
         });
       }
     });
@@ -83,9 +89,8 @@ const updateBucketList = (req, res) => {
       if (err) {
         res.status(500).send({ success: false, message: 'Failed' });
       } else {
-        res.status(200).send({
-          success: !!bucketList,
-          bucketListData: bucketList,
+        res.status(getStatusCode(bucketList)).send({
+          ...successValue(bucketList),
           message: bucketList
             ? 'Bucketlist updated successfully'
             : `Bucketlist with id ${req.params.id} does not exist`,
@@ -102,12 +107,11 @@ const deleteBucketList = (req, res) => {
       if (err) {
         res.status(500).send({ success: false, message: 'Failed' });
       } else {
-        res.status(200).send({
-          success: !!bucketList,
-          bucketListData: bucketList,
+        res.status(getStatusCode(bucketList)).send({
+          ...successValue(bucketList),
           message: bucketList
             ? 'Bucketlist deleted successfully'
-            : `Bucketlist with ${req.params.id} does not exist`,
+            : `Bucketlist with id ${req.params.id} does not exist`,
         });
       }
     },

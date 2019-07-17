@@ -1,5 +1,10 @@
 import BucketListItemModel from '../../models/bucketlist-items';
 
+const getStatusCode = bucketListItem => (bucketListItem ? 200 : 404);
+const successValue = bucketListItem => (bucketListItem ? { success: true, bucketListItemData: bucketListItem } : {});
+const getSuccessPaginationValues = bucketListItems => (bucketListItems.docs.length ? { success: true, bucketListItemData: bucketListItems } : {});
+const getSuccessValues = bucketListItems => (bucketListItems.length ? { success: true, bucketListItemData: bucketListItems } : {});
+
 const createBucketListItem = (req, res) => {
   const bucketListItemData = { ...req.body, bucketlistId: req.params.id };
 
@@ -47,9 +52,8 @@ const getbucketListItem = (req, res) => {
           message: 'Server error',
         });
       } else {
-        res.status(200).send({
-          success: true,
-          bucketListItemData: bucketListItem || {},
+        res.status(getStatusCode(bucketListItem)).send({
+          ...successValue(bucketListItem),
           message: bucketListItem
             ? 'BucketlistItem(s) retrieved successfully'
             : `BucketlistItem with id ${req.params.bucketlistItemId} does not exist`,
@@ -71,9 +75,8 @@ const getBucketListItems = (req, res) => {
         if (err) {
           res.status(500).send({ success: false, message: `Server error ${err}` });
         } else {
-          res.status(200).send({
-            success: true,
-            bucketListItemData: bucketListItems,
+          res.status(getStatusCode(bucketListItems.docs.length)).send({
+            ...getSuccessPaginationValues(bucketListItems),
             message: bucketListItems.docs.length
               ? 'Bucketlist item(s) retrieved and paginated successfully'
               : 'No bucketlist items available',
@@ -88,9 +91,8 @@ const getBucketListItems = (req, res) => {
         if (err) {
           res.status(500).send({ success: false, message: err });
         } else {
-          res.status(200).send({
-            success: true,
-            bucketListItemData: bucketListItems,
+          res.status(getStatusCode(bucketListItems.length)).send({
+            ...getSuccessValues(bucketListItems),
             message: bucketListItems.length
               ? 'Bucketlist item(s) retrieved successfully'
               : 'No bucketlist items available',
@@ -115,9 +117,8 @@ const updateBucketListItem = (req, res) => {
           message: 'Server error',
         });
       } else {
-        res.status(200).send({
-          success: true,
-          bucketListItemData: bucketListItem,
+        res.status(getStatusCode(bucketListItem)).send({
+          ...successValue(bucketListItem),
           message: bucketListItem
             ? 'Bucketlist Item updated successfully'
             : `BucketlistItem with id ${req.params.bucketlistItemId} does not exist`,
@@ -128,19 +129,18 @@ const updateBucketListItem = (req, res) => {
 };
 
 const deleteBucketListItem = (req, res) => {
-  BucketListItemModel.findByIdAndRemove(
+  BucketListItemModel.findOneAndRemove(
     { _id: req.params.bucketlistItemId, bucketlistId: req.params.id, userId: req.userId },
-    (err, bucketlist) => {
+    (err, bucketListItem) => {
       if (err) {
         res.status(500).send({
           success: false,
           message: `Server error ${err}`,
         });
       } else {
-        res.status(200).send({
-          success: true,
-          bucketListItemData: bucketlist,
-          message: bucketlist
+        res.status(getStatusCode(bucketListItem)).send({
+          ...successValue(bucketListItem),
+          message: bucketListItem
             ? 'Bucketlist Item deleted successfully'
             : `BucketlistItem with id ${req.params.bucketlistItemId} does not exist`,
         });

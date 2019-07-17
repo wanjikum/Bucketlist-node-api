@@ -68,6 +68,7 @@ describe('Bucketlists endpoints: api/v1/bucketlists', () => {
         .set('Authorization', `Bearer ${token}`);
 
       expect(userSignUpResponse).to.have.status(201);
+      expect(res).to.have.status(409);
       expect(res.body).to.be.a('Object');
       expect(userSignUpResponse.body.message).to.be.eql('Mickey has been created successfully.');
       expect(res.body.success).to.be.eql(false);
@@ -85,6 +86,7 @@ describe('Bucketlists endpoints: api/v1/bucketlists', () => {
         .set('Authorization', 'Bearer iooonn');
 
       expect(res.body).to.be.a('Object');
+      expect(res).to.have.status(403);
       expect(res.body.success).to.be.eql(false);
       expect(res.body.message).to.be.eql('Token is not valid');
     });
@@ -97,12 +99,13 @@ describe('Bucketlists endpoints: api/v1/bucketlists', () => {
         .set('Authorization', 'Bearer ');
 
       expect(res.body).to.be.a('Object');
+      expect(res).to.have.status(403);
       expect(res.body.success).to.be.eql(false);
       expect(res.body.message).to.be.eql('Auth token is not supplied');
     });
   });
 
-  describe('GET: api/v1/bucketlists', () => {
+  describe('GET: /bucketlists/:id', () => {
     it('Retrieves a bucketlist successfully', async () => {
       const userSignUpResponse = await chai
         .request(app)
@@ -125,6 +128,7 @@ describe('Bucketlists endpoints: api/v1/bucketlists', () => {
         .set('Authorization', `Bearer ${token}`);
 
       expect(userSignUpResponse).to.have.status(201);
+      expect(res).to.have.status(200);
       expect(userSignUpResponse.body.message).to.be.eql('Mickey has been created successfully.');
       expect(postResponse.body.message).to.be.eql(
         'Bucketlist Go to Nairobi has been created successfully',
@@ -154,8 +158,9 @@ describe('Bucketlists endpoints: api/v1/bucketlists', () => {
       expect(userSignUpResponse).to.have.status(201);
       expect(userSignUpResponse.body.message).to.be.eql('Mickey has been created successfully.');
       expect(res.body).to.be.a('Object');
+      expect(res).to.have.status(400);
       expect(res.body.success).to.be.eql(false);
-      expect(res.body.message).to.be.eql('Server Error');
+      expect(res.body.message).to.be.eql('The bucketlist id provided is not valid');
     });
 
     it('Can not retrieve another users bucketlist', async () => {
@@ -191,8 +196,8 @@ describe('Bucketlists endpoints: api/v1/bucketlists', () => {
       expect(postResponse.body.message).to.be.eql(
         'Bucketlist Go to Nairobi has been created successfully',
       );
+      expect(res).to.have.status(404);
       expect(res.body).to.be.a('Object');
-      expect(res.body.success).to.be.eql(false);
       expect(res.body.message).to.be.eql(`Bucketlist with id ${id} does not exist`);
     });
   });
@@ -232,6 +237,7 @@ describe('Bucketlists endpoints: api/v1/bucketlists', () => {
         'Bucketlist Go to Nairobi has been created successfully',
       );
       expect(res.body).to.be.a('Object');
+      expect(res).to.have.status(200);
       expect(res.body.bucketListData).to.have.property('_id');
       expect(res.body.bucketListData).to.have.property('name');
       expect(res.body.bucketListData).to.have.property('description');
@@ -257,8 +263,9 @@ describe('Bucketlists endpoints: api/v1/bucketlists', () => {
       expect(userSignUpResponse).to.have.status(201);
       expect(userSignUpResponse.body.message).to.be.eql('Mickey has been created successfully.');
       expect(res.body).to.be.a('Object');
+      expect(res).to.have.status(400);
       expect(res.body.success).to.be.eql(false);
-      expect(res.body.message).to.be.eql('Failed');
+      expect(res.body.message).to.be.eql('The bucketlist id provided is not valid');
     });
 
     it('Can not update another users bucketlist', async () => {
@@ -295,9 +302,8 @@ describe('Bucketlists endpoints: api/v1/bucketlists', () => {
       expect(postResponse.body.message).to.be.eql(
         'Bucketlist Go to Nairobi has been created successfully',
       );
+      expect(res).to.have.status(404);
       expect(res.body).to.be.a('Object');
-      expect(res.body.bucketListData).to.be.a('null');
-      expect(res.body.success).to.be.eql(false);
       expect(res.body.message).to.be.eql(`Bucketlist with id ${id} does not exist`);
     });
   });
@@ -354,8 +360,9 @@ describe('Bucketlists endpoints: api/v1/bucketlists', () => {
       expect(userSignUpResponse).to.have.status(201);
       expect(userSignUpResponse.body.message).to.be.eql('Mickey has been created successfully.');
       expect(res.body).to.be.a('Object');
+      expect(res).to.have.status(400);
       expect(res.body.success).to.be.eql(false);
-      expect(res.body.message).to.be.eql('Failed');
+      expect(res.body.message).to.be.eql('The bucketlist id provided is not valid');
     });
 
     it('Can not delete another users bucketlist', async () => {
@@ -391,9 +398,9 @@ describe('Bucketlists endpoints: api/v1/bucketlists', () => {
       expect(postResponse.body.message).to.be.eql(
         'Bucketlist Go to Nairobi has been created successfully',
       );
+      expect(res).to.have.status(404);
       expect(res.body).to.be.a('Object');
-      expect(res.body.success).to.be.eql(false);
-      expect(res.body.message).to.be.eql(`Bucketlist with ${id} does not exist`);
+      expect(res.body.message).to.be.eql(`Bucketlist with id ${id} does not exist`);
     });
   });
 
@@ -473,6 +480,7 @@ describe('Bucketlists endpoints: api/v1/bucketlists', () => {
       expect(userSignUpResponse).to.have.status(201);
       expect(userSignUpResponse.body.message).to.be.eql('Mickey has been created successfully.');
       expect(res.body).to.be.a('Object');
+      expect(res).to.have.status(200);
       expect(res.body.success).to.be.eql(true);
       expect(res.body.message).to.be.eql('Bucketlist(s) retrieved and paginated successfully');
       expect(res.body.bucketListData.docs).to.have.lengthOf(2);
@@ -514,9 +522,8 @@ describe('Bucketlists endpoints: api/v1/bucketlists', () => {
         'Bucketlist Go to Nairobi has been created successfully',
       );
       expect(res.body).to.be.a('Object');
-      expect(res.body.success).to.be.eql(true);
-      expect(res.body.message).to.be.eql('Bucketlist(s) retrieved successfully');
-      expect(res.body.bucketListData).to.have.lengthOf(0);
+      expect(res).to.have.status(404);
+      expect(res.body.message).to.be.eql('No bucketlist(s) available');
     });
   });
 });
