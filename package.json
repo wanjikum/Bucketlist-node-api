@@ -8,7 +8,7 @@
     "start": "npm run build && node ./build/index.js",
     "dev": "nodemon --exec babel-node server/index.js",
     "lint": "./node_modules/.bin/eslint",
-    "build-babel": "babel src -d build",
+    "build-babel": "babel server -d build",
     "clean": "rm -rf build && mkdir build",
     "build": "npm run clean && npm run build-babel"
   },
