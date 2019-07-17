@@ -28,7 +28,11 @@ It's an API that is used to store a list of things that one has not done before 
 | `PUT /api/v1/bucketlists/<id>/bucketlistItems/<item_id>`          | Update a bucket list item                    |
 | `DELETE /api/v1/bucketlists/<id>/bucketlistItems/<item_id>`       | Delete an item in a bucket list              |
 
-## GETTING STARTED:
+## Swagger documentation
+
+The app is currently documented using swagger 2.0 and the Open API Specification found [here](https://www.google.com).
+
+# GETTING STARTED:
 
 ### Running the api locally
 
@@ -80,13 +84,9 @@ It's an API that is used to store a list of things that one has not done before 
 
 Assuming you have already done step 1 - 4 above, you can just run this command:
 
-   ```
-   $ npm run test
-   ```
-
-## Swagger documentation
-
-The app is currently documented using swagger 2.0 and the Open API Specification found [here](https://www.google.com).
+```
+$ npm run test
+```
 
 # Prerequisites
 
