@@ -10,3 +10,6 @@ env:
     - TEST_SECRET=somesecretTT
     - TEST_DATABASE='mongodb:/127.0.0.1/test_bucketlist_db'
     - TEST_PORT=3003
+script:
+  - npm test
+  - npm run coveralls

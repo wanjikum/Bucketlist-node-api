@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/travis-ci/travis-web.svg?branch=master)](https://travis-ci.org/travis-ci/travis-web)
+[![Build Status](https://travis-ci.org/travis-ci/travis-web.svg?branch=master)](https://travis-ci.org/travis-ci/travis-web) [![Coverage Status](https://coveralls.io/repos/github/wanjikum/Bucketlist-node-api/badge.svg?branch=master)](https://coveralls.io/github/wanjikum/Bucketlist-node-api?branch=master)
 
 # BucketList Application API
 
