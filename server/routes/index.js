@@ -36,6 +36,28 @@ const {
 } = bucketListItemController;
 
 const router = express.Router();
+const checkForHexRegExp = new RegExp('^[0-9a-fA-F]{24}$');
+
+const checkBucketlistId = (req, res, next, id) => {
+  if (!checkForHexRegExp.test(id)) {
+    return res
+      .status(400)
+      .json({ message: 'The bucketlist id provided is not valid', success: false });
+  }
+  next();
+};
+
+const checkBucketlistItemId = (req, res, next, bucketlistItemId) => {
+  if (!checkForHexRegExp.test(bucketlistItemId)) {
+    return res
+      .status(400)
+      .json({ message: 'The bucketlist item id provided is not valid', success: false });
+  }
+  next();
+};
+
+router.param('id', checkBucketlistId);
+router.param('bucketlistItemId', checkBucketlistItemId);
 
 router.get('/', (req, res) => {
   res.status(200).send({ message: 'Welcome to the Bucketlist API' });
