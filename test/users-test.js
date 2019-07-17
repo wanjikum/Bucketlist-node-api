@@ -60,7 +60,7 @@ describe('Users endpoints', () => {
         .post(`${baseUrl}/auth/signin`)
         .send({ email, password });
 
-      expect(res).to.have.status(404);
+      expect(res).to.have.status(401);
       expect(res.body).to.be.a('Object');
       expect(res.body.message).to.be.eql('Email does not exist');
       expect(res.body.success).to.be.eql(false);
