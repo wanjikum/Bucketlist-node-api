@@ -14,17 +14,21 @@ mongoose.connect(config.DATABASE);
 
 const db = mongoose.connection;
 
+const isDevEnv = process.env.NODE_ENV === 'development';
+
 db.on('error', (err) => {
-  if (process.env.NODE_ENV === 'production') {
+  if (isDevEnv) {
     console.log('Failed to establish connection', err);
   }
 });
 
 db.once('open', () => {
-  if (process.env.NODE_ENV === 'production') {
-    app.listen(PORT, () => {
+  app.listen(PORT, () => {
+    if (isDevEnv) {
       console.log(`Server is listening on port ${PORT}`);
-    });
+    }
+  });
+  if (isDevEnv) {
     console.log('Connection established');
   }
 });
@@ -37,7 +41,7 @@ app.use(bodyParser.json());
 // (containing the keys and values) on req.body.
 app.use(bodyParser.urlencoded({ extended: true }));
 
-if (process.env.NODE_ENV === 'production') {
+if (isDevEnv) {
   app.use(morgan('combined'));
 }
 
