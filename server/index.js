@@ -9,14 +9,15 @@ import router from './routes';
 const app = express();
 try {
   const PORT = config.PORT || 4001;
-  mongoose.set('useNewUrlParser', true);
+  // mongoose.set('useNewUrlParser', true);
 
-  mongoose.connect(config.DATABASE, { useNewUrlParser: true });
+  // mongoose.connect(config.DATABASE, { useNewUrlParser: true });
+  mongoose.connect(config.DATABASE);
   const db = mongoose.connection;
 
-  db.on('error', () => {
+  db.on('error', (err) => {
     if (process.env.NODE_ENV === 'production') {
-      console.log('Failed to establish connection');
+      console.log('Failed to establish connection', err);
     }
   });
 
