@@ -51,6 +51,6 @@ if (isDevEnv) {
   app.use(morgan('combined'));
 }
 
-app.use('/api/v1/', router);
+app.use('/api/v1', router);
 
 export default app;
