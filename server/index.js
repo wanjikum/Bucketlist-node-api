@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import swaggerUi from 'swagger-ui-express';
-import YAML from 'yamljs';
+import swager from '../swagger.json';
 
 import config from './config/config';
 
@@ -17,10 +17,9 @@ mongoose.connect(config.DATABASE);
 
 const db = mongoose.connection;
 
-const isDevEnv = process.env.NODE_ENV === 'production';
+const isDevEnv = process.env.NODE_ENV === 'development';
 
-const swaggerDocument = YAML.load('./swagger.yaml');
-app.use('/bucketlist-node-api/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs/', swaggerUi.serve, swaggerUi.setup(swager));
 
 db.on('error', (err) => {
   if (isDevEnv) {
