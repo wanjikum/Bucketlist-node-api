@@ -1,0 +1,332 @@
+swagger: "2.0"
+info:
+  description:
+    It's an API that is used to store a list of things that one has not done
+    before but wants to do before dying. It's CRUD API app built on node,
+    express and MongoDB.
+  version: 1.0.0
+  title: BucketList Application API
+  contact:
+    email: wanjikumillicent@gmail.com
+host: bucketlist-node-api.herokuapp.com
+basePath: /api/v1
+tags:
+  - name: user
+    description: Authorises user access into the application
+  - name: bucketlist
+    description: "Gives one power to Create, Edit, View and Delete Bucketlists"
+  - name: bucketlistItem
+    description: "Gives one power to Create, Edit, View and Delete Bucketlist Items"
+schemes:
+  - https
+  - http
+paths:
+  /auth/signup:
+    post:
+      tags:
+        - user
+      summary: Registers a new user
+      description: "A user is allowed to register into the system once."
+      operationId: createUser
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Created user object
+          required: true
+          schema:
+            $ref: "#/definitions/user" 
+      responses:
+        "201":
+          description: successful operation
+        "400":
+          description: invalid email/password/firstName/lastName supplied
+        "409":
+          description: email supplied already exists
+        "500":
+          description: server error
+
+  /auth/login:
+    post:
+      tags:
+        - user
+      summary: Allows a registered user to access our applicatiom
+      description: This can only be done by an existing user.
+      operationId: loginUser
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Created user object
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+      responses:
+        "200":
+          description: successful operation
+        "401":
+          description: invalid email/password supplied
+        "500":
+          description: server error
+  /bucketlists:
+    post:
+      tags:
+        - bucketlist
+      summary: Add a new bucketlist to the store
+      description: this can only be done by an authorised user
+      operationId: addBucketlist
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Creates bucketlist object
+          required: true
+          schema:
+            $ref: "#/definitions/bucketlist"     
+      responses:
+        "200":
+          description: successful operation
+        "400":
+          description: invalid name/description/status supplied
+        "409":
+          description: duplicate bucketlist
+        "500":
+          description: server error
+  "/bucketlists/{id}":
+    put:
+      tags:
+        - bucketlist
+      summary: Edit a new bucketlist to the store
+      description: this can only be done by an authorised user
+      operationId: editBucketlist
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Edits bucketlist object
+          required: true
+          schema:
+            $ref: "#/definitions/bucketlist"
+        - name: id
+          in: path
+          description: ID of bucketlist to edit
+          required: true
+          type: string
+      responses:
+        "200":
+           description: successful operation
+        "404":
+          description: Page not found
+        "500":
+          description: server error
+    get:
+      tags:
+        - bucketlist
+      summary: find bucketlist by ID
+      description: returns a single bucketlist
+      operationId: getbucketlistById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of bucketlist to return
+          required: true
+          type: string
+      responses:
+        "200":
+          description: successful operation
+        "404":
+          description: Page not found
+        "500":
+          description: server error
+    delete:
+      tags:
+        - bucketlist
+      summary: delete bucketlist by ID
+      description: returns a single bucketlist
+      operationId: deletebucketlistById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of bucketlist to delete
+          required: true
+          type: string
+      responses:
+        "200":
+          description: successful operation
+        "404":
+          description: Page not found
+        "500":
+          description: server error  
+  "/bucketlists/{id}/bucketlistItems/":
+    post:
+      tags:
+        - bucketlistItem
+      summary: find bucketlist item by ID
+      description: returns a single bucketlist item
+      operationId: createbucketlistItem
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of bucketlist
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Creates bucketlist object
+          required: true
+          schema:
+            $ref: "#/definitions/bucketlistItem"
+      responses:
+        "201":
+          description: successful operation
+        "404":
+          description: Page not found
+        "500":
+          description: server error
+  "/bucketlists/{id}/bucketlistItems/{bucketlistItemId}":
+    put:
+      tags:
+        - bucketlistItem
+      summary: Edit a new bucketlist item to the store
+      description: this can only be done by an authorised user
+      operationId: editBucketlistItem
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Edits bucketlist object
+          required: true
+          schema:
+            $ref: "#/definitions/bucketlistItem"
+        - name: id
+          in: path
+          description: ID of bucketlist
+          required: true
+          type: string
+        - name: bucketlistItemId
+          in: path
+          description: ID of bucketlist item to edit
+          required: true
+          type: string
+      responses:
+        "200":
+           description: successful operation
+        "404":
+          description: Page not found
+        "500":
+          description: server error
+    get:
+      tags:
+        - bucketlistItem
+      summary: find bucketlist item by ID
+      description: returns a single bucketlist item
+      operationId: getbucketlistItemById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of bucketlist
+          required: true
+          type: string
+        - name: bucketlistItemId
+          in: path
+          description: ID of bucketlist item to return
+          required: true
+          type: string
+      responses:
+        "200":
+          description: successful operation
+        "404":
+          description: Page not found
+        "500":
+          description: server error
+    delete:
+      tags:
+        - bucketlistItem
+      summary: delete bucketlist by ID
+      description: deletes a single bucketlist item
+      operationId: deletebucketlistItemById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of bucketlist 
+          required: true
+          type: string
+        - name: bucketlistItemId
+          in: path
+          description: ID of bucketlist item to delete
+          required: true
+          type: string
+      responses:
+        "200":
+          description: successful operation
+        "404":
+          description: Page not found
+        "500":
+          description: server error 
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: api_key
+    in: header
+definitions:
+  bucketlist:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      status:
+        type: string
+        enum:
+          - done
+          - in progress
+          - to do
+  user:
+    type: object
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+  bucketlistItem:
+    type: object
+    properties:
+      name:
+        type: string
+      status:
+        type: string
+        enum:
+          - done
+          - in progress
+          - to do

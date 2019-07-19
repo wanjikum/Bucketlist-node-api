@@ -2,6 +2,9 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+
 import config from './config/config';
 
 import router from './routes';
@@ -14,7 +17,10 @@ mongoose.connect(config.DATABASE);
 
 const db = mongoose.connection;
 
-const isDevEnv = process.env.NODE_ENV === 'development';
+const isDevEnv = process.env.NODE_ENV === 'production';
+
+const swaggerDocument = YAML.load('./swagger.yaml');
+app.use('/bucketlist-node-api/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 db.on('error', (err) => {
   if (isDevEnv) {
@@ -45,6 +51,6 @@ if (isDevEnv) {
   app.use(morgan('combined'));
 }
 
-app.use('/api/v1', router);
+app.use('/api/v1/', router);
 
 export default app;
