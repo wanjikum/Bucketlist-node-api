@@ -2,6 +2,9 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
+import swaggerUi from 'swagger-ui-express';
+import swager from '../swagger.json';
+
 import config from './config/config';
 
 import router from './routes';
@@ -15,6 +18,8 @@ mongoose.connect(config.DATABASE);
 const db = mongoose.connection;
 
 const isDevEnv = process.env.NODE_ENV === 'development';
+
+app.use('/api-docs/', swaggerUi.serve, swaggerUi.setup(swager));
 
 db.on('error', (err) => {
   if (isDevEnv) {

@@ -1,0 +1,543 @@
+{
+  "info": {
+    "title": "BucketList Application API",
+    "version": "1.0.0",
+    "description": "It's an API that is used to store a list of things that one has not done before but wants to do before dying. It's CRUD API app built on node, express and MongoDB.",
+    "contact": {
+      "email": "wanjikumillicent@gmail.com"
+    }
+  },
+  "paths": {
+    "/bucketlists": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "409": {
+            "description": "duplicate bucketlist"
+          },
+          "500": {
+            "description": "server error"
+          },
+          "400": {
+            "description": "invalid name/description/status supplied"
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "User token",
+            "required": true
+          },
+          {
+            "required": true,
+            "in": "body",
+            "description": "Creates bucketlist object",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/bucketlist"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "tags": ["bucketlist"],
+        "summary": "Add a new bucketlist to the store",
+        "operationId": "addBucketlist",
+        "consumes": ["application/json"],
+        "description": "this can only be done by an authorised user"
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "User token",
+            "required": true
+          }
+        ],
+        "produces": ["application/json"],
+        "operationId": "getbucketlists",
+        "tags": ["bucketlist"],
+        "summary": "gets all bucketlists",
+        "description": "returns all bucketlists"
+      }
+    },
+    "/bucketlists/{id}/bucketlistItems/": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "User token",
+            "required": true
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "ID of bucketlist",
+            "in": "path",
+            "name": "id"
+          },
+          {
+            "required": true,
+            "in": "body",
+            "description": "Creates bucketlist object",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/bucketlistItem"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "operationId": "createbucketlistItem",
+        "tags": ["bucketlistItem"],
+        "summary": "find bucketlist item by ID",
+        "description": "returns a single bucketlist item"
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "User token",
+            "required": true
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "ID of bucketlist",
+            "in": "path",
+            "name": "id"
+          }
+        ],
+        "produces": ["application/json"],
+        "operationId": "getbucketlistItems",
+        "tags": ["bucketlistItem"],
+        "summary": "gets all bucketlist items",
+        "description": "returns all bucketlist items"
+      }
+    },
+    "/bucketlists/{id}": {
+      "put": {
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "User token",
+            "required": true
+          },
+          {
+            "required": true,
+            "in": "body",
+            "description": "Edits bucketlist object",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/bucketlist"
+            }
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "ID of bucketlist to edit",
+            "in": "path",
+            "name": "id"
+          }
+        ],
+        "produces": ["application/json"],
+        "tags": ["bucketlist"],
+        "summary": "Edit a new bucketlist to the store",
+        "operationId": "editBucketlist",
+        "consumes": ["application/json"],
+        "description": "this can only be done by an authorised user"
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "User token",
+            "required": true
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "ID of bucketlist to return",
+            "in": "path",
+            "name": "id"
+          }
+        ],
+        "produces": ["application/json"],
+        "operationId": "getbucketlistById",
+        "tags": ["bucketlist"],
+        "summary": "find bucketlist by ID",
+        "description": "returns a single bucketlist"
+      },
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "User token",
+            "required": true
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "ID of bucketlist to delete",
+            "in": "path",
+            "name": "id"
+          }
+        ],
+        "produces": ["application/json"],
+        "operationId": "deletebucketlistById",
+        "tags": ["bucketlist"],
+        "summary": "delete bucketlist by ID",
+        "description": "returns a single bucketlist"
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": "successful operation"
+          },
+          "409": {
+            "description": "email supplied already exists"
+          },
+          "500": {
+            "description": "server error"
+          },
+          "400": {
+            "description": "invalid email/password/firstName/lastName supplied"
+          }
+        },
+        "parameters": [
+          {
+            "required": true,
+            "in": "body",
+            "description": "Created user object",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/user"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "operationId": "createUser",
+        "tags": ["user"],
+        "summary": "Registers a new user",
+        "description": "A user is allowed to register into the system once."
+      }
+    },
+    "/bucketlists/{id}/bucketlistItems/{bucketlistItemId}": {
+      "put": {
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "User token",
+            "required": true
+          },
+          {
+            "required": true,
+            "in": "body",
+            "description": "Edits bucketlist object",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/bucketlistItem"
+            }
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "ID of bucketlist",
+            "in": "path",
+            "name": "id"
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "ID of bucketlist item to edit",
+            "in": "path",
+            "name": "bucketlistItemId"
+          }
+        ],
+        "produces": ["application/json"],
+        "tags": ["bucketlistItem"],
+        "summary": "Edit a new bucketlist item to the store",
+        "operationId": "editBucketlistItem",
+        "consumes": ["application/json"],
+        "description": "this can only be done by an authorised user"
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "User token",
+            "required": true
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "ID of bucketlist",
+            "in": "path",
+            "name": "id"
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "ID of bucketlist item to return",
+            "in": "path",
+            "name": "bucketlistItemId"
+          }
+        ],
+        "produces": ["application/json"],
+        "operationId": "getbucketlistItemById",
+        "tags": ["bucketlistItem"],
+        "summary": "find bucketlist item by ID",
+        "description": "returns a single bucketlist item"
+      },
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "User token",
+            "required": true
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "ID of bucketlist",
+            "in": "path",
+            "name": "id"
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "ID of bucketlist item to delete",
+            "in": "path",
+            "name": "bucketlistItemId"
+          }
+        ],
+        "produces": ["application/json"],
+        "operationId": "deletebucketlistItemById",
+        "tags": ["bucketlistItem"],
+        "summary": "delete bucketlist by ID",
+        "description": "deletes a single bucketlist item"
+      }
+    },
+    "/auth/signin": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "401": {
+            "description": "invalid email/password supplied"
+          },
+          "500": {
+            "description": "server error"
+          }
+        },
+        "parameters": [
+          {
+            "required": true,
+            "in": "body",
+            "description": "Created user object",
+            "name": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "operationId": "loginUser",
+        "tags": ["user"],
+        "summary": "Allows a registered user to access our applicatiom",
+        "description": "This can only be done by an existing user."
+      }
+    }
+  },
+  "schemes": ["https", "http"],
+  "tags": [
+    {
+      "name": "user",
+      "description": "Authorises user access into the application"
+    },
+    {
+      "name": "bucketlist",
+      "description": "Gives one power to Create, Edit, View and Delete Bucketlists"
+    },
+    {
+      "name": "bucketlistItem",
+      "description": "Gives one power to Create, Edit, View and Delete Bucketlist Items"
+    }
+  ],
+  "basePath": "/api/v1",
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    }
+  },
+  "host": "bucketlist-node-api.herokuapp.com",
+  "definitions": {
+    "bucketlist": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": ["done", "in progress", "to do"],
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "lastName": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        }
+      }
+    },
+    "bucketlistItem": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": ["done", "in progress", "to do"],
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "swagger": "2.0"
+}
