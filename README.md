@@ -32,7 +32,7 @@ It's an API that is used to store a list of things that one has not done before 
 
 ## Swagger documentation
 
-The app is currently documented using swagger 2.0 and the Open API Specification found [here](https://www.google.com).
+The app is currently documented using swagger 2.0 and the Open API Specification found [here](https://bucketlist-node-api.herokuapp.com/api-docs/).
 
 # GETTING STARTED:
 
