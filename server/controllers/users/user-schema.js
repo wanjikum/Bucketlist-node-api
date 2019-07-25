@@ -22,8 +22,7 @@ const userSignUpSchema = Joi.object().keys({
     .required()
     .error(new Error('Invalid email.')),
   password: Joi.string()
-    .regex(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/)
-    .min(7)
+    .min(4)
     .max(15)
     .required()
     .error(new Error('Invalid password.')),
@@ -36,8 +35,7 @@ const userLogInSchema = Joi.object().keys({
     .required()
     .error(new Error('Invalid email.')),
   password: Joi.string()
-    .regex(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/)
-    .min(7)
+    .min(4)
     .max(15)
     .required()
     .error(new Error('Invalid password.')),
