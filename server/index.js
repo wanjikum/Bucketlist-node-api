@@ -3,6 +3,8 @@ import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import swaggerUi from 'swagger-ui-express';
+import cors from 'cors';
+
 import swager from '../swagger.json';
 
 import config from './config/config';
@@ -20,6 +22,7 @@ const db = mongoose.connection;
 const isDevEnv = process.env.NODE_ENV === 'development';
 
 app.use('/api-docs/', swaggerUi.serve, swaggerUi.setup(swager));
+app.use(cors());
 
 db.on('error', (err) => {
   if (isDevEnv) {
