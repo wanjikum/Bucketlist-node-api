@@ -75,7 +75,7 @@ const getBucketListItems = (req, res) => {
         if (err) {
           res.status(500).send({ success: false, message: `Server error ${err}` });
         } else {
-          res.status(getStatusCode(bucketListItems.docs.length)).send({
+          res.status(200).send({
             ...getSuccessPaginationValues(bucketListItems),
             message: bucketListItems.docs.length
               ? 'Bucketlist item(s) retrieved and paginated successfully'
