@@ -522,7 +522,7 @@ describe('Bucketlists endpoints: api/v1/bucketlists', () => {
         'Bucketlist Go to Nairobi has been created successfully',
       );
       expect(res.body).to.be.a('Object');
-      expect(res).to.have.status(404);
+      expect(res).to.have.status(200);
       expect(res.body.message).to.be.eql('No bucketlist(s) available');
     });
   });

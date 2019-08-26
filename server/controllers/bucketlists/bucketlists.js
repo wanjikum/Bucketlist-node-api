@@ -54,7 +54,7 @@ const getBucketLists = (req, res) => {
       if (err) {
         res.status(500).send({ success: false, message: err });
       } else {
-        res.status(getStatusCode(bucketLists.docs.length)).send({
+        res.status(200).send({
           ...getSuccessPaginationValues(bucketLists),
           message: bucketLists.docs.length
             ? 'Bucketlist(s) retrieved and paginated successfully'
@@ -67,7 +67,7 @@ const getBucketLists = (req, res) => {
       if (err) {
         res.status(500).send({ success: false, message: err });
       } else {
-        res.status(getStatusCode(bucketLists.length)).send({
+        res.status(200).send({
           ...getSuccessValues(bucketLists),
           message: bucketLists.length
             ? 'Bucketlist(s) retrieved successfully'

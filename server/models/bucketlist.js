@@ -4,7 +4,7 @@ import mongoosePaginate from 'mongoose-paginate';
 const bucketlistSchema = new mongoose.Schema({
   name: String,
   description: String,
-  done: String,
+  status: String,
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

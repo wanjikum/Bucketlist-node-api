@@ -209,7 +209,7 @@ describe('Bucketlist items endpoints', () => {
       expect(userSignUpResponse).to.have.status(201);
       expect(userSignUpResponse.body.message).to.be.eql('Mickey has been created successfully.');
       expect(res.body).to.be.a('Object');
-      expect(res).to.have.status(404);
+      expect(res).to.have.status(200);
       expect(res.body.message).to.be.eql(
         `BucketlistItem with id ${bucketlistItemId} does not exist`,
       );
@@ -594,7 +594,7 @@ describe('Bucketlist items endpoints', () => {
         'Bucketlist Go to Kisumu has been created successfully',
       );
       expect(res.body).to.be.a('Object');
-      expect(res).to.have.status(404);
+      expect(res).to.have.status(200);
       expect(res.body.message).to.be.eql('No bucketlist items available');
     });
   });
